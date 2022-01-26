@@ -1,0 +1,50 @@
+                                                                      GHOSTS - Ghosts having fun
+
+Ghost are living in big castle with K rooms.
+
+As they have around few hundred years and very tired, they decided to buy teleports. Every teleport can work only in one way ( to prevent collision ). Ghosts have decided which teleports they want to build and in which order they should be built.
+
+King of ghosts, Bob, asked you to check list of teleports and decide which of them do not build. He don't want ghosts having fun in infinite ride with teleports.
+
+CODE::
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define sky LONG_LONG_MAX
+#define ajen LONG_LONG_MIN
+#define mod 1000000007
+#define modulo 998244353
+
+vector<ll>adj[100005];
+ll vis[1005];
+bitset<1010>mask[1010];
+
+void dfs(ll x){
+    vis[x] = 1;
+    for(int child : adj[x]){
+        if(!vis[child])dfs(child);
+        mask[x] |= mask[child];
+        mask[x].set(child);
+    }
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll k; cin>>k;
+    ll n; cin>>n;
+    for(int i = 0; i<n; i++){
+        ll x,y; cin>>x>>y;
+        if(mask[y][x]||x==y)cout<<x<<" "<<y<<endl;
+        else if (mask[x][y])continue;
+        else{
+            memset(vis,0,sizeof(vis));
+            adj[x].push_back(y);
+            for(int i = 1; i<=k; i++){
+                if(!vis[i])dfs(i);
+            }
+        }
+    }
+    cout<<0<<" "<<0<<endl;
+    return 0;
+}
