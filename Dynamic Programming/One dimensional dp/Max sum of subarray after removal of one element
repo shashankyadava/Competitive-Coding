@@ -1,0 +1,82 @@
+                                                                          D. Remove One Element
+                                                                          time limit per test2 seconds
+                                                                          memory limit per test256 megabytes
+                                                                          inputstandard input
+                                                                          outputstandard output
+You are given an array a consisting of n integers.
+
+You can remove at most one element from this array. Thus, the final length of the array is n−1 or n.
+
+Your task is to calculate the maximum possible length of the strictly increasing contiguous subarray of the remaining array.
+
+Recall that the contiguous subarray a with indices from l to r is a[l…r]=al,al+1,…,ar. The subarray a[l…r] is called strictly increasing if al<al+1<⋯<ar.
+
+Input
+The first line of the input contains one integer n (2≤n≤2⋅105) — the number of elements in a.
+
+The second line of the input contains n integers a1,a2,…,an (1≤ai≤109), where ai is the i-th element of a.
+
+Output
+Print one integer — the maximum possible length of the strictly increasing contiguous subarray of the array a after removing at most one element.
+
+Examples
+inputCopy
+5
+1 2 5 3 4
+outputCopy
+4
+inputCopy
+2
+1 2
+outputCopy
+2
+inputCopy
+7
+6 5 4 3 2 4 3
+outputCopy
+2
+Note
+In the first example, you can delete a3=5. Then the resulting array will be equal to [1,2,3,4] and the length of its largest increasing subarray will be equal to 4.
+
+CODE::
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define sky LONG_LONG_MAX
+#define ajen LONG_LONG_MIN
+#define mod 1000000007
+#define modulo 998244353
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll n; cin>>n;
+    vector<ll>a(n);
+    for(int i = 0; i<n; i++)cin>>a[i];
+    ll pref[n],suff[n];
+    for(int i = 0; i<n; i++){
+        pref[i] = 1;
+        suff[i] = 1;
+    }
+    for(int i = 0; i<n-1; i++){
+        if(a[i]<a[i+1]){
+            pref[i+1] = pref[i]+1;
+        }
+        else pref[i+1] = 1;
+    }
+    for(int i = n-1; i>0; i--){
+        if(a[i]>a[i-1]){
+            suff[i-1] = suff[i]+1;
+        }
+        else suff[i-1] = 1;
+    }
+    ll maxx = ajen;
+    for(int i = 0; i<n; i++){
+        if(i<n-2&&a[i]<a[i+2]){
+            maxx = max(maxx,pref[i]+suff[i+2]);
+        }
+        else maxx = max(maxx,pref[i]);
+    }
+    cout<<maxx<<endl;
+    return 0;
+}
