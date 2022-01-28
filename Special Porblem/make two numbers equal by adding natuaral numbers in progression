@@ -1,0 +1,38 @@
+You are given two integers a and b. You can perform a sequence of operations: during the first operation you choose one of these numbers and increase it by 1; during the second operation you choose one of these numbers and increase it by 2, and so on. You choose the number of these operations yourself.
+
+For example, if a=1 and b=3, you can perform the following sequence of three operations:
+
+add 1 to a, then a=2 and b=3;
+add 2 to b, then a=2 and b=5;
+add 3 to a, then a=5 and b=5.
+Calculate the minimum number of operations required to make a and b equal.
+
+CODE::
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define sky LONG_LONG_MAX
+#define ajen LONG_LONG_MIN
+#define mod 1000000007
+#define modulo 998244353
+
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll t; cin>>t;
+    while(t--){
+        ll a,b; cin>>a>>b;
+        ll diff = max(a,b)-min(a,b);
+        ll ans = 0;
+        for(int i = 0; i<=100000; i++){
+            ll num = i*(i+1)/2;
+            if(num>=diff&&num%2==(diff%2)){
+                ans = i;
+                break;
+            }
+        }
+        cout<<ans<<endl;
+    }
+    return 0;
+}
