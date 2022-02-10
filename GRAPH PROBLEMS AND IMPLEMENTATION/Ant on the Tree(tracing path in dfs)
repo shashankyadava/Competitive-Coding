@@ -1,0 +1,125 @@
+D. Ant on the Tree
+time limit per test2 seconds
+memory limit per test256 megabytes
+inputstandard input
+outputstandard output
+Connected undirected graph without cycles is called a tree. Trees is a class of graphs which is interesting not only for people, but for ants too.
+
+An ant stands at the root of some tree. He sees that there are n vertexes in the tree, and they are connected by n - 1 edges so that there is a path between any pair of vertexes. A leaf is a distinct from root vertex, which is connected with exactly one other vertex.
+
+The ant wants to visit every vertex in the tree and return to the root, passing every edge twice. In addition, he wants to visit the leaves in a specific order. You are to find some possible route of the ant.
+
+Input
+The first line contains integer n (3 ≤ n ≤ 300) — amount of vertexes in the tree. Next n - 1 lines describe edges. Each edge is described with two integers — indexes of vertexes which it connects. Each edge can be passed in any direction. Vertexes are numbered starting from 1. The root of the tree has number 1. The last line contains k integers, where k is amount of leaves in the tree. These numbers describe the order in which the leaves should be visited. It is guaranteed that each leaf appears in this order exactly once.
+
+Output
+If the required route doesn't exist, output -1. Otherwise, output 2n - 1 numbers, describing the route. Every time the ant comes to a vertex, output it's index.
+
+Examples
+inputCopy
+3
+1 2
+2 3
+3
+outputCopy
+1 2 3 2 1 
+inputCopy
+6
+1 2
+1 3
+2 4
+4 5
+4 6
+5 6 3
+outputCopy
+1 2 4 5 4 6 4 2 1 3 1 
+inputCopy
+6
+1 2
+1 3
+2 4
+4 5
+4 6
+5 3 6
+outputCopy
+-1
+
+CODE::
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define sky LONG_LONG_MAX
+#define ajen LONG_LONG_MIN
+#define mod 1000000007
+#define modulo 998244353
+
+vector<ll>g[100005];
+bool path[500][500];
+ll n,k = 0,cnt = 0;
+vector<ll>pos(100005);
+vector<ll>ans;
+void dfs(int v,int p = -1){
+    bool leaf = false;
+    for(int child:g[v]){
+        if(p!=child){
+            leaf = true;
+            dfs(child,v);
+            for(int i = 0; i<n; i++)path[v][i] |= path[child][i];
+            // for(int i = 0; i<n; i++){
+            //     cout<<path[v][i];
+            // }
+            // cout<<endl;
+        }
+    }
+    if(!leaf){
+        path[v][v] = true;
+        k++;
+    }
+}
+void pathtracer(int v,int p = -1){
+    ans.push_back(v);
+    if(v==pos[cnt]){
+        cnt++;
+        return;
+    }
+    ll sz = g[v].size() - (p!=-1);
+    for(int i = 0; i<sz; i++){
+        bool flag = false;
+        for (int child : g[v]){ 
+        if (child != p && path[child][pos[cnt]]) {
+                pathtracer(child, v);
+                ans.push_back(v);
+                flag = true;
+                break;
+            }
+        }
+        if (!flag) {
+            cout << -1 << '\n';
+            exit(0);
+        }
+    }
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cin>>n;
+    for(int i = 0; i<n-1; i++){
+        ll x,y; cin>>x>>y;
+        x--,y--;
+        g[x].push_back(y);
+        g[y].push_back(x);
+
+    }
+    dfs(0);
+    for(int i = 0; i<k; i++){
+        cin>>pos[i];
+        pos[i]--;
+    }
+    pathtracer(0);
+    for(int i = 0; i<ans.size(); i++){
+        cout<<ans[i]+1<<" "; 
+    }
+    cout<<endl;
+    return 0;
+}
