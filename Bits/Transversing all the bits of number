@@ -1,0 +1,39 @@
+                                                                              PROBLEM
+                                                                              
+You are given an array consisting of all integers from [l,r] inclusive. For example, if l=2 and r=5, the array would be [2,3,4,5]. What's the minimum number of elements 
+you can delete to make the bitwise AND of the array non-zero?
+
+A bitwise AND is a binary operation that takes two equal-length binary representations and performs the AND operation on each pair of the corresponding bits.
+
+CODE::
+
+#include<bits/stdc++.h>
+using namespace std;
+//dengyaotriangle!
+ 
+const int maxn=200005;
+const int maxl=20;
+int s[maxl][maxn];
+ 
+int main(){
+    for(int i=0;i<maxl;i++){
+        for(int j=1;j<maxn;j++){
+            if(((j&1<<i))){
+                s[i][j]=s[i][j-1]+1;
+            }
+            else s[i][j]=s[i][j-1];
+            
+        }
+    }
+    ios::sync_with_stdio(0);cin.tie(0);
+    int t;
+    cin>>t;
+    while(t--){
+        int l,r;
+        cin>>l>>r;
+        int ans=r-l+1;
+        for(int i=0;i<maxl;i++)ans=min(ans,r-l+1-s[i][r]+s[i][l-1]);
+        cout<<ans<<'\n';
+    }
+    return 0;
+}
