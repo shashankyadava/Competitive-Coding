@@ -1,0 +1,38 @@
+Your task is to count the number of ways to construct sum n by throwing a dice one or more times. Each throw produces an outcome between 1 and 6.
+
+For example, if n=3, there are 4 ways:
+1+1+1
+1+2
+2+1
+3
+
+CODE::
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+#define MAXN 10000001
+#define MOD 1000000007
+
+ll DP[MAXN], n;
+
+ll compute (int left) {
+    if (DP[left] != 0) {
+        return DP[left]%MOD;
+    }
+    for (int i = 1; i <= 6; i++) {
+        if (left - i >= 0) {
+            DP[left] = (DP[left]+compute(left - i))%MOD;
+            DP[left] %= MOD;
+        }
+    }
+    return DP[left]%MOD;
+}
+
+int main() {
+    cin >> n;
+    memset(DP, 0, sizeof(DP));
+    DP[0] = 1;
+    cout << compute(n)%MOD << endl;
+}
+
