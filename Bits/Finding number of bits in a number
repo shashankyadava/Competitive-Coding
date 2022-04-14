@@ -1,0 +1,17 @@
+CODENCODE
+
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        int count_of_bits = 0;
+        while(n>0){
+            count_of_bits++; //fast method 
+            n = n&(n-1);
+        }
+        while(n>0){
+             if(n&1)count_of_bits++;// slow method
+             n = n>>1;
+        }
+        return count_of_bits;
+    }
+};
