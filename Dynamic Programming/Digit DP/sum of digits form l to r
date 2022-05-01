@@ -1,0 +1,73 @@
+                                                                  CPCRC1C - Sum of Digits
+                                                                  
+                                                                    #dynamic-programming
+                                                                    
+Majid is a 3rd-grade elementary student and quite well in mathematics. Once, Majid's teacher asked him to calculate the sum of numbers 1 through n.
+
+Majid quickly answered, and his teacher made him another challenge. He asked Majid to calculate the sum of the digits of numbers 1 through n.
+
+Majid did finally find the solution. Now it is your turn, can you find a solution?
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+ll arr[1001];
+ll dp[11][100][2];
+ll getsum(ll n,ll pos,ll sum,ll flag){
+    if(pos>n)return sum;
+    if(dp[pos][sum][flag]!=-1)return dp[pos][sum][flag];
+    ll res = 0;
+    ll limit = 9;
+    if(!flag) limit = arr[pos];
+
+    for(int i = 0; i<=limit; i++){
+        if(flag||i<limit){
+            res+=getsum(n,pos+1,sum+i,1);
+        }
+        else res+=getsum(n,pos+1,sum+i,0);
+        // cout<<res<<endl;
+    }
+    // cout<<res<<endl;
+    return dp[pos][sum][flag] = res;
+}
+ll digitsum(ll n){
+    string x = to_string(n);
+    ll sum = 0;
+    for(int i = 0; i<x.size(); i++){
+        sum+=x[i]-'0';
+    }
+    return sum;
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    while(1){
+        ll a,b; cin>>a>>b;
+        if(a==-1&&b==-1)break;
+        string x = to_string(a);
+        string y = to_string(b);
+        // cout<<x<<y<<endl;
+    	for(int i = 0; i<x.size(); i++){
+            arr[i+1] = x[i]-'0';
+            // cout<<arr[i+1]<<" ";
+        }
+        // cout<<endl;
+        // cout<<x.size()<<endl;
+        memset(dp,-1,sizeof(dp));
+        ll L = getsum(x.size(),1,0,0);
+        // cout<<L<<endl;
+        // memset(arr,0,sizeof(arr));
+        memset(dp,-1,sizeof(dp));
+        for(int i = 0; i<y.size(); i++){
+            arr[i+1] = y[i]-'0';
+            // cout<<arr[i+1]<<" ";
+        }
+        // cout<<endl;
+        // cout<<x<<" "<<y<<endl;
+        ll R = getsum(y.size(),1,0,0);
+        // cout<<R<<endl;
+
+        cout<<R-L+digitsum(a)<<endl;;
+    }
+    return 0;
+}
