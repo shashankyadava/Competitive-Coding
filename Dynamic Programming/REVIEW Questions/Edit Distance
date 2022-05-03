@@ -1,0 +1,43 @@
+The edit distance between two strings is the minimum number of operations required to transform one string into the other.
+
+The allowed operations are:
+Add one character to the string.
+Remove one character from the string.
+Replace one character in the string.
+For example, the edit distance between LOVE and MOVIE is 2, because you can first replace L with M, and then add I.
+
+Your task is to calculate the edit distance between two strings.
+
+CODE::
+
+#include<bits/stdc++.h>
+using namespace std;
+int dp[5001][5001];
+int solve(string& a,string& b,int i,int j){
+
+    if(i==(int)a.size()|| j==(int)b.size()){
+        return max((int)a.size()-i,(int)b.size()-j);
+    }
+    if(dp[i][j]!=-1)return dp[i][j];
+    int ans;
+    if(a[i]==b[j]){
+        ans = solve(a,b,i+1,j+1);
+    }
+    else{
+        int op1 = 1+solve(a,b,i,j+1);//insert if one more element is inserted and first of both are same then one if removed from both the string
+        int op2 = 1+solve(a,b,i+1,j);//remove if first element is removed then string a of length i+1 and string of length b
+        int op3 = 1+solve(a,b,i+1,j+1);//replace if both the first element are same then operation is need to be performed at string of length i+1 and j+1
+        ans = min(op1,min(op2,op3));
+    }
+    return dp[i][j] = ans;
+
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    string a,b; cin>>a>>b;
+    memset(dp,-1,sizeof(dp));
+    // cout<<a<<" "<<b<<endl; 
+    cout<<solve(a,b,0,0)<<endl;
+    return 0;
+}
