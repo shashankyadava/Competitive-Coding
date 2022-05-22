@@ -1,0 +1,57 @@
+                                                                C. Balanced Stone Heaps
+                                                                time limit per test1 second
+                                                                memory limit per test256 megabytes
+                                                                inputstandard input
+                                                                outputstandard output
+There are n heaps of stone. The i-th heap has hi stones. You want to change the number of stones in the heap by performing the following process once:
+
+You go through the heaps from the 3-rd heap to the n-th heap, in this order.
+Let i be the number of the current heap.
+You can choose a number d (0≤3⋅d≤hi), move d stones from the i-th heap to the (i−1)-th heap, and 2⋅d stones from the i-th heap to the (i−2)-th heap.
+So after that hi is decreased by 3⋅d, hi−1 is increased by d, and hi−2 is increased by 2⋅d.
+You can choose different or same d for different operations. Some heaps may become empty, but they still count as heaps.
+What is the maximum number of stones in the smallest heap after the process?
+
+CODE::
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+bool good(vector<ll>&v,ll mid){
+    vector<ll>curr(v.begin(),v.end());
+    for(int i = v.size()-1; i>=2; i--){
+        if(curr[i]<mid)return false;
+        int d = min(v[i],curr[i]-mid);
+        curr[i-1]+= d/3;
+        curr[i-2]+=(d/3)*2;
+    }
+    return min(curr[0],curr[1])>=mid;
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll t; cin>>t;
+    while(t--){
+        ll n; cin>>n;
+        vector<ll>v(n);
+        ll maxx = -1e9;
+        for(int i = 0; i<n; i++){
+            cin>>v[i];
+            maxx = max(maxx,v[i]);
+        }
+        ll low = 0,high = maxx;
+        ll ans = 0;
+        while(low<=high){
+            ll mid = low+(high-low)/2;
+            if(good(v,mid)){
+                low = mid+1;
+                ans = mid;
+            }
+            else{
+                high = mid-1;
+            }
+        }
+        cout<<ans<<endl;
+    }
+    return 0;
+}
