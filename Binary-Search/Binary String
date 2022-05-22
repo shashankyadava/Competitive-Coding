@@ -1,0 +1,57 @@
+                                                                          C. Binary String
+                                                                          time limit per test2 seconds
+                                                                          memory limit per test512 megabytes
+                                                                          inputstandard input
+                                                                          outputstandard output
+                                                                          
+You are given a string s consisting of characters 0 and/or 1.
+
+You have to remove several (possibly zero) characters from the beginning of the string, and then several (possibly zero) characters from the end of the string. The string may become empty after the removals. The cost of the removal is the maximum of the following two values:
+
+the number of characters 0 left in the string;
+the number of characters 1 removed from the string.
+What is the minimum cost of removal you can achieve?
+
+CODE::
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+bool good(ll mid,vector<ll>&v){
+    ll left_ones = v.size()-mid;
+    for(int i = 0; i<mid+1; i++){
+        ll l = v[i];
+        ll r = v[i+left_ones-1];
+        ll zeroes_left = r-l+1-left_ones;
+        if(zeroes_left<=mid)return true;
+    }
+    return false;
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll t; cin>>t;
+    while(t--){
+        string s; cin>>s;
+        vector<ll>v;
+        for(int i = 0; i<s.size(); i++){
+            if(s[i]=='1')v.push_back(i);
+        }
+        ll low = 0,high = v.size();
+        ll ans = 0;
+        if(v.size()==0||v.size()==s.size()){
+            cout<<"0"<<endl;
+            continue;
+        }
+        while(low<=high){
+            ll mid = low+(high-low)/2;
+            if(good(mid,v)){
+                high = mid-1;
+                ans = mid;
+            }
+            else low = mid+1;
+        }
+        cout<<ans<<endl;
+    }
+    return 0;
+}
