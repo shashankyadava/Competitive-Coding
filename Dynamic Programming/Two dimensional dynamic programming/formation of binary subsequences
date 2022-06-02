@@ -11,43 +11,21 @@ A subsequence is a sequence that can be derived from another sequence by deletin
 
 CODE::
 
-/* C++ code to find the number of unique good subsequences in a given binary string*/
-#include <bits/stdc++.h>
-using namespace std;
-
-int numberOfUniqueGoodSubsequences(string binary)
-{
-    int mod = 1e9 + 7, endsWithZero = 0, endsWithOne = 0, hasZero = 0;
-    for (int i = 0; i < binary.length(); ++i)
-    {
-        if (binary[i] == '1')
-        {
-            endsWithOne = (endsWithZero + endsWithOne + 1) % mod;
+const int mod = 1e9+7;
+class Solution {
+public:
+    int numberOfUniqueGoodSubsequences(string binary) {
+        int zero =  0,one = 0;
+        int has_zero = 0;
+        for(int i = 0; i<binary.size(); i++){
+            if(binary[i]=='1'){
+                one = (one+zero+1)%mod;
+            }
+            else{
+                has_zero = 1;
+                zero = (zero+one)%mod;
+            }
         }
-        else
-        {
-            endsWithZero = (endsWithZero + endsWithOne) % mod;
-            hasZero = 1;
-        }
+        return (one+zero+has_zero)%mod;
     }
-    return (endsWithZero + endsWithOne + hasZero) % mod;
-}
-
-int main()
-{
-    string binary;
-    binary = "0";
-    cout << "The total number of unique good subsequences in the string "
-         << binary << " are: "
-         << numberOfUniqueGoodSubsequences(binary) << endl;
-
-    binary = "1";
-    cout << "The total number of unique good subsequences in the string "
-         << binary << " are: "
-         << numberOfUniqueGoodSubsequences(binary) << endl;
-
-    binary = "11100110110000000";
-    cout << "The total number of unique good subsequences in the string "
-         << binary << " are: "
-         << numberOfUniqueGoodSubsequences(binary) << endl;
-}
+};
