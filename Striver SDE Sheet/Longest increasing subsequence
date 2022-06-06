@@ -1,0 +1,66 @@
+#include<bits/stdc++.h>
+
+// int recur(int arr[],int index,int n,int prev){
+//     if(index==n){
+//         return dp[index][prev+1] = 0;
+//     }
+//     if(dp[index][prev+1]!=-1)return dp[index][prev+1];
+//     if(prev==-1||arr[index]>arr[prev]){
+//         return dp[index][prev+1] = max(1+recur(arr,index+1,n,index),recur(arr,index+1,n,prev));
+//     }
+//     else return dp[index][prev+1] = recur(arr,index+1,n,prev);
+// }
+
+
+int longestIncreasingSubsequence(int arr[], int n)
+{
+   int dp[1000] = {1};
+    // tabulation
+//     for(int i = n; i>=0; i--){
+//         for(int j = i-1; j>=-1; j--){
+//             if(i==n)dp[i][j+1] = 0;
+//             else{
+//                 if(j==-1||arr[i]>arr[j]){
+//                     dp[i][j+1] = max(1+dp[i+1][i+1],dp[i+1][j+1]);
+//                 }
+//                 else dp[i][j+1] = dp[i+1][j+1];
+//             }
+//         }
+//     }
+
+
+    // printing of lis
+//     memset(dp,1,sizeof(dp));
+    int maxx = -1e8;
+    int lastindex = 0;
+    int hash[n];
+    for(int i = 0; i<n; i++){
+        for(int j = 0; j<i; j++){
+            if(arr[i]>arr[j]&&1+dp[j]>dp[i]){
+                int temp = 1+dp[j];
+                dp[i] = max(temp,dp[i]);
+                hash[i] = j;
+            }
+        }
+//         cout<<dp[i]<<" ";
+        if(maxx<dp[i]){
+            maxx = dp[i];
+            lastindex = i;
+        }
+    }
+    vector<int>ans;
+    ans.push_back(arr[lastindex]);
+    while(hash[lastindex]!=lastindex){
+        lastindex = hash[lastindex];
+        ans.push_back(arr[lastindex]);
+    }
+//     cout<endl;
+    for(int i = 0; i<ans.size(); i++){
+        cout<<ans[ans.size()-i-1]<<" ";
+    }
+    cout<<endl;
+    return maxx;
+}
+
+
+// binary search method
