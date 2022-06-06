@@ -64,3 +64,22 @@ int longestIncreasingSubsequence(int arr[], int n)
 
 
 // binary search method
+int lis(int arr[],int n){
+    vector<int>len;
+    len.push_back(arr[0]);
+    for(int i = 1; i<n; i++){
+        if(len.back()<arr[i]){
+            len.push_back(arr[i]);
+        }
+        else{
+            int pos = lower_bound(len.begin(),len.end(),arr[i])-len.begin();
+            len[pos] = arr[i];
+        }
+    }
+    return len.size();
+}
+int longestIncreasingSubsequence(int arr[], int n)
+{
+    return lis(arr,n);
+}
+
