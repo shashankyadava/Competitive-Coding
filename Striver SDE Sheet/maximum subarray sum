@@ -1,0 +1,13 @@
+#include <bits/stdc++.h>
+#define ll long long
+long long maxSubarraySum(int arr[], int n)
+{
+    
+    ll sum = 0,maxx = 0;
+    for(int i = 0; i<n; i++){
+        sum+=arr[i];
+        sum = max(sum,(ll)arr[i]);
+        maxx = max(maxx,(ll)sum);
+    }
+    return maxx;
+}
