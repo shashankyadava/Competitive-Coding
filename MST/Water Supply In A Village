@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+vector<int>parent(100005);
+int totalcost;
+bool comp(vector<int>a,vector<int>b){
+    return a[2]<b[2];
+}
+int f(int a){
+    if(parent[a]==a)return a;
+    return parent[a] = f(parent[a]);
+}
+void u(int a,int b,int c,vector<int>wells){
+    int x = f(a);
+    int y = f(b);
+    if(x!=y){
+        int c1 = wells[x-1];
+        int c2 = wells[y-1];
+        if(c+min(c1,c2)<c1+c2){
+            if(c1>c2){
+                swap(x,y);
+            }
+            parent[y] = x;
+            totalcost = totalcost-max(c1,c2)+c;
+        }
+        
+    }
+}
+int supplyWater(int n, int k, vector<int> &wells, vector<vector<int>> &pipes) {
+    for(int i = 1; i<=n; i++){
+        parent[i] = i;
+    }
+  	totalcost = 0;
+    for(int i = 0; i<n; i++)totalcost+=wells[i];
+    sort(pipes.begin(),pipes.end(),comp);
+    for(int i = 0; i<k; i++){
+        int a = pipes[i][0];
+        int b = pipes[i][1];
+        int c = pipes[i][2];
+        u(a,b,c,wells);
+    }
+    return totalcost;
+}
