@@ -1,0 +1,32 @@
+#include<bits/stdc++.h>
+int dp[1001][1001];
+int recur(vector<int>&v,int i,int j){
+    if(i==j)return dp[i][j] = 0;
+    if(dp[i][j]!=-1)return dp[i][j];
+    int minn = 1e9;
+    for(int k = i; k<j; k++){
+        int steps = recur(v,i,k)+recur(v,k+1,j)+v[i-1]*v[k]*v[j];
+        minn = min(minn,steps);
+    }
+    return dp[i][j] = minn;
+}
+int matrixMultiplication(vector<int> &arr, int N)
+{
+    int n = arr.size();
+//     memset(dp,-1,sizeof(dp));
+//     return recur(arr,1,N-1); recursion
+    for(int i = n-1; i>=1; i--){
+        for(int j = 1; j<n; j++){
+            if(i==j)dp[i][j] = 0;
+            else{
+                 int minn = 1e9;
+                 for(int k = i; k<j; k++){
+                    int steps = dp[i][k]+dp[k+1][j]+arr[i-1]*arr[k]*arr[j];
+                    minn = min(minn,steps);
+                 }
+                 dp[i][j] = minn;
+            }
+        }
+    }
+    return dp[1][n-1];
+}
