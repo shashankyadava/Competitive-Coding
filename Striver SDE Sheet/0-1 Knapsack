@@ -1,0 +1,19 @@
+#include<bits/stdc++.h>
+int dp[1001][1001];
+int recur(vector<int>&v,vector<int>&w,int n,int x){
+    if(n==0) return dp[n][x] = 0;
+    int take = 0,nottake = 0;
+    if(dp[n][x]!=-1)return dp[n][x];
+    if(x-w[n-1]>=0){
+         take = max(v[n-1]+recur(v,w,n-1,x-w[n-1]),recur(v,w,n-1,x));
+    }
+    else{
+        nottake = recur(v,w,n-1,x);
+    }
+    return dp[n][x] = max(take,nottake);
+}
+int maxProfit(vector<int> &v, vector<int> &w, int n, int x)
+{
+    memset(dp,-1,sizeof(dp));
+	return recur(v,w,n,x);
+}
