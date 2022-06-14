@@ -1,0 +1,24 @@
+#include<bits/stdc++.h>
+long dp[11][2001];
+long recur(vector<int>&v,int n,int value){
+    if(n==0){
+        if(value==0)return dp[n][value] = 1;
+        else return dp[n][value] = 0;
+    }
+    if(dp[n][value]!=-1)return dp[n][value];
+    long long take = 0,nottake = 0;
+    if(value-v[n-1]>=0){
+        take = recur(v,n,value-v[n-1]);
+    }
+    nottake = recur(v,n-1,value);
+    return dp[n][value] = take+nottake;
+}
+long countWaysToMakeChange(int *denominations, int n, int value)
+{
+    memset(dp,-1,sizeof(dp));
+    vector<int>v;
+    for(int i = 0; i<n; i++){
+        v.push_back(denominations[i]);
+    }
+    return recur(v,n,value);
+}
