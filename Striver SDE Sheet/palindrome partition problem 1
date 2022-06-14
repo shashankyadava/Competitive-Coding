@@ -1,0 +1,33 @@
+#include<bits/stdc++.h>
+vector<vector<string>>ans;
+bool check(string s,int i,int j){
+    int begin = i;
+    int end = j;
+    while(begin<end){
+        if(s[begin]!=s[end])return false;
+        begin++;
+        end--;
+    }
+    return true;
+}
+void recur(string &s,int i,vector<string>&v){
+    if(i==s.size()){
+        ans.push_back(v);
+        return;
+    }
+    string s1;
+    for(int x = i; x<s.size(); x++){
+        s1+=s[x];
+        if(check(s,i,x)){
+            v.push_back(s1);
+            recur(s,x+1,v);
+            v.pop_back();
+        }
+    }
+}
+vector<vector<string>> partition(string &s) 
+{
+    vector<string>v;
+    recur(s,0,v);
+    return ans;
+}
