@@ -1,0 +1,61 @@
+class Solution {
+public:
+    vector<int>tree;
+    static bool comp(vector<int>&a,vector<int>&b){
+        if(a[0]<b[0])return true;
+        else if(a[0]==b[0]){
+            if(a[1]>b[1])return true;
+        }
+        return false;
+    }
+    void build(int low,int high,int parent){
+        if(low>high)return;
+        if(low==high){
+            tree[parent] = 1;
+            return;
+        }
+        int mid = low+(high-low)/2;
+        build(low,mid,2*parent+1);
+        build(mid+1,high,2*parent+2);
+        tree[parent] = tree[2*parent+1]+tree[2*parent+2];
+    }
+    void update(int low,int high,int parent,int index){
+        if(low==high){
+            tree[parent] = 0;
+            return;
+        }
+        int mid = low+(high-low)/2;
+        if(index>mid){
+            update(mid+1,high,2*parent+2,index);
+        }
+        else update(low,mid,2*parent+1,index);
+        tree[parent] = tree[2*parent+1]+tree[2*parent+2];
+    }
+    int find(int low,int high,int parent,int k){
+        if(low==high){
+            return low;
+        }
+        int mid = low+(high-low)/2;
+        if(tree[2*parent+1]>k){
+            return find(low,mid,2*parent+1,k);
+        }
+        else{
+            return find(mid+1,high,2*parent+2,k-tree[2*parent+1]);
+        }
+        
+    }
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        int n = people.size();
+        vector<vector<int>>res(n);
+        tree.resize(4*n,0);
+        sort(people.begin(),people.end(),comp);
+        build(0,n-1,0);
+        for(int i=0;i<n;i++){
+            int index=find(0,n-1,0,people[i][1]);    
+            res[index]=people[i];
+            update(0,n-1,0,index);  // UPDATE THIS BECAUSE THIS PLACE HAS NOW BEEN TAKEN
+        }
+        return res;
+        
+    }
+};
