@@ -1,0 +1,67 @@
+                                                      A. Tokitsukaze and Strange Inequality
+
+Tokitsukaze has a permutation p of length n. Recall that a permutation p of length n is a sequence p1,p2,…,pn consisting of n distinct integers, each of which from 1 to n (1≤pi≤n).
+
+She wants to know how many different indices tuples [a,b,c,d] (1≤a<b<c<d≤n) in this permutation satisfy the following two inequalities:
+
+pa<pc and pb>pd.
+Note that two tuples [a1,b1,c1,d1] and [a2,b2,c2,d2] are considered to be different if a1≠a2 or b1≠b2 or c1≠c2 or d1≠d2.
+
+CODE::
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll t; cin>>t;
+    while(t--){
+        ll n; cin>>n;
+        vector<ll>v(n);
+        for(int i = 0; i<n; i++){
+            cin>>v[i];
+            // cout<<v[i]<<" ";
+        }
+        // cout<<endl;
+        int dp1[n+1][n+1];
+        int dp2[n+1][n+1];
+        for(int i = 0; i<n; i++){
+            for(int j = 0; j<n; j++){
+                dp1[i][j] = 0;
+                dp2[i][j] = 0;
+            }
+        }
+        for(int i = 0; i<n; i++){
+            for(int j = i+1; j<n; j++){
+                if(v[i]>v[j]){
+                    dp1[i][j] = dp1[i][j-1]+1;
+                }
+                else dp1[i][j] = dp1[i][j-1];
+                // cout<<dp1[i][j]<<" ";
+            }
+            // cout<<endl;
+        }
+        for(int i = n-1; i>=0; i--){
+            for(int j = i-1; j>=0; j--){
+                if(v[i]>v[j]){
+                    dp2[i][j] = dp2[i][j+1]+1;
+                }
+                else dp2[i][j] = dp2[i][j+1];
+                // cout<<dp2[i][j]<<" ";
+            }
+            // cout<<endl;
+        }
+        ll ans = 0;
+        for(int i = n-1; i>=0; i--){
+            for(int j = i-1; j>=0; j--){
+                // cout<<dp2[j][0]<<" "<<dp2[j][i]<<" "<<dp1[i][n-1]<<" "<<dp1[i][j]<<" "<<endl; 
+                ans+=(dp2[i][0]-dp2[i][j])*(dp1[j][n-1]-dp1[j][i]);
+                // cout<<ans<<" "; 
+            }
+            // cout<<endl;
+        }
+        cout<<ans<<endl;
+    }
+    return 0;
+}
