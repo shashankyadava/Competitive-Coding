@@ -1,0 +1,31 @@
+class mst{
+    struct edges{
+        ll a,b,w;
+    };
+    edges ar[100005];
+    vector<ll>parent;
+    vector<ll>r;
+    mst(int n){
+        parent.resize(n+1,-1);
+        r.resize(n+1,0);
+    }
+    int sum;
+    bool comp(edges a,edges b){
+        if(a.w<b.w)return true;
+        else return false;
+    }
+    int f(ll a){// find with path compression
+        if(parent[a]<0)return a;
+        return parent[a] = f(parent[a]);
+    }
+    void u(ll a,ll b){//union by rank
+        
+        if(r[b]>r[a]){
+            swap(a,b);
+        }
+        parent[b] = a;
+        if(r[a]==r[b]){
+            r[a]++;
+        } 
+    }
+};
