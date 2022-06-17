@@ -1,0 +1,32 @@
+class dsu{
+
+    vector<int>parent;
+    vector<pair<ll,ll>>ans;
+    vector<ll>r;
+    dsu(int n){
+        parent.resize(n+1,-1);
+        ans.resize(n+1);
+        r.resize(n+1,0);
+    }
+    int f(ll a){
+        if(parent[a]<0)return a;
+        return parent[a] = f(parent[a]);
+    }
+    void u(ll a,ll b){
+        ll x = f(a);
+        ll y = f(b);
+        if(x==y){
+            ans.push_back({a,b});
+            return;
+        }
+        else{
+            if(r[b]>r[a]){
+                swap(a,b);
+            }
+            if(r[a]==r[b]){
+                r[a]++;
+            }
+            parent[x] = y; 
+        }
+    }
+};
