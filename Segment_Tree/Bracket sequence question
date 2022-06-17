@@ -1,0 +1,64 @@
+                                                              C. Sereja and Brackets
+
+Sereja has a bracket sequence s1, s2, ..., sn, or, in other words, a string s of length n, consisting of characters "(" and ")".
+
+Sereja needs to answer m queries, each of them is described by two integers li, ri (1 ≤ li ≤ ri ≤ n). The answer to the i-th query is the length of the maximum correct bracket subsequence of sequence sli, sli + 1, ..., sri. Help Sereja answer all queries.
+
+You can find the definitions for a subsequence and a correct bracket sequence in the notes.
+
+CODE::
+
+#include<bits/stdc++.h>
+using namespace std;
+const int mx = 1000006;
+char s[mx];
+struct state {
+    public:
+        int full, open, close;
+        state() {
+            full = open = close = 0;
+        }
+}seg[5*mx];
+state merge(state a,state b){
+    state ans;
+    ans.full = a.full+b.full+min(a.open,b.close);
+    ans.open = a.open+b.open-min(a.open,b.close);
+    ans.close = a.close+b.close-min(a.open,b.close);
+    return ans;
+}
+void build(int ind,int low,int high){
+    if(low==high){
+        seg[ind].open = s[low]=='(';
+        seg[ind].close = s[low]==')';
+        seg[ind].full = 0;
+        return;
+    }
+    int mid = (low+high)/2;
+    build(2*ind+1,low,mid);
+    build(2*ind+2,mid+1,high);
+    seg[ind] = merge(seg[2*ind+1],seg[2*ind+2]);
+}
+state query(int ind,int low,int high,int l,int r){
+    if(low==l&&high==r)return seg[ind];
+    int mid = (low+high)/2;
+    if(r<=mid)return query(2*ind+1,low,mid,l,r);
+    else if(l>mid)return query(2*ind+2,mid+1,high,l,r);
+    return merge(query(2*ind+1,low,mid,l,mid), query(2*ind+2,mid+1,high,mid+1,r));
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    int n;
+    scanf("%s", s);
+    n = strlen(s);
+    build(0, 0, n - 1);
+ 
+    int m, l, r;
+    scanf("%d", &m);
+    while(m--) {
+        scanf("%d %d", &l, &r);
+        --l,--r;
+        printf("%d\n", 2 * query(0, 0, n - 1, l, r).full);
+    }
+    return 0;
+}
