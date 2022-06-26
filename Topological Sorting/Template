@@ -1,0 +1,30 @@
+class topological_sorting{
+    // first calculate indegree of each node
+    // node with 0 indegree is what you need to push in queue
+    // this is kahn algorithm
+    // this is only applicable at directed acylic graph
+    // this is also to check if cycle exist in graph where it fails 
+    int in[100];
+    int n;
+    vector<int>graph[100];
+    vector<int>res;
+    for(int i = 0; i<n; i++){
+        int x,y; cin>>x>>y;
+        graph[x].push_back(y);
+        in[y]++;
+    }
+    for(int i = 0; i<=100; i++){
+        if(in[i]==0)q.push(i);
+    }
+    while(!q.empty()){
+        int parent = q.front();
+        res.push_back(parent);
+        q.pop();
+        for(auto child: graph[parent]){
+            in[child]--;
+            if(in[child]==0)q.push(child);
+        }
+    }
+    if(res.size()==no_of_nodes)return true;
+    else return false;
+};
