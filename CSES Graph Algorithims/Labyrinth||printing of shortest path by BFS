@@ -1,0 +1,83 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define sky LONG_LONG_MAX
+#define ajen LONG_LONG_MIN
+#define mod 1000000007
+#define modulo 998244353
+const int N = 100000;
+ll n,m;
+int dx[4] = {1,-1,0,0};
+int dy[4] = {0,0,1,-1};
+bool isvalid(int x,int y){
+    if(x<0||y<0||x>=n||y>=m)return false;
+    return true;
+}
+string stepDir = "DURL";
+int vis[1001][1001];
+int level[1001][1001];
+int previousStep[1001][1001];
+int main(){
+    //setIO("filename");
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cin>>n>>m;
+    char c[n][m];
+    int xs,ys,xe,ye;
+    for(int i = 0; i<n; i++){
+        for(int j = 0; j<m; j++){
+            cin>>c[i][j];
+            // cout<<c[i][j]<<endl;
+            if(c[i][j]=='A'){
+                xs = i,ys = j;
+            }
+            if(c[i][j]=='B'){
+                xe = i,ye = j;
+            }
+        }
+    }
+    
+    queue<pair<int,int>>q;
+    vis[xs][ys] = 1;
+    level[xs][ys] = 0;
+    q.push({xs,ys});
+    while(!q.empty()){
+        int xx = q.front().first;
+        int yy = q.front().second;
+        q.pop();
+        for(int i = 0; i<4; i++){
+            int x = xx+dx[i];
+            int y = yy+dy[i];
+            if(isvalid(x,y)&&!vis[x][y]&&c[x][y]!='#'){
+                q.push({x,y});
+                vis[x][y] = 1;
+                level[x][y] = level[xx][yy]+1;
+                previousStep[x][y] = i;
+            }
+        }
+    }
+    if(vis[xe][ye]){
+        cout<<"YES"<<endl;
+        cout<<level[xe][ye]<<endl;
+        vector<int>steps;
+        // cout<<xs<<" "<<ys<<endl;
+        pair<int,int> e,b;
+        e = make_pair(xe,ye);
+        b = make_pair(xs,ys);
+        while(e!=b){
+            int p = previousStep[e.first][e.second];
+            steps.push_back(p);
+            e = make_pair(e.first-dx[p],e.second-dy[p]);
+            // cout<<xe<<" "<<ye<<endl;
+        }
+        reverse(steps.begin(),steps.end());
+        for(auto it:steps){
+            cout<<stepDir[it];
+        }
+        cout<<endl;
+    }
+    else{
+        cout<<"NO"<<endl;
+    }  
+    return 0;
+}
