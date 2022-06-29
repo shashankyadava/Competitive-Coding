@@ -1,0 +1,56 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define li long long int
+#define sky LONG_LONG_MAX
+#define ajen LONG_LONG_MIN
+#define mod 1000000007
+#define modulo 998244353
+#define INF 1e18
+const int N = 1000005;
+
+ll d[N+1];
+ll path[N+1];
+map<int,vector<pair<int,int>>>g;
+priority_queue<int>q;
+int main(){
+    //setIO("filename");
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll n,m; cin>>n>>m;
+    for(int i = 0; i<m; i++){
+        int x,y,wt; cin>>x>>y>>wt;
+        g[x].push_back({y,wt});
+        g[y].push_back({x,wt});
+    }
+    q.push(1);
+    for(int i = 1; i<=n; i++)d[i] = INF,path[i] = i;
+    d[1] = 0;
+    while(!q.empty()){
+        int node = q.top();
+        q.pop();
+        for(auto child: g[node]){
+            int curr_dist = child.second;
+            int curr_node = child.first;
+            if(d[node]+curr_dist<d[curr_node]){
+                d[curr_node] = curr_dist+d[node];
+                q.push(curr_node);
+                path[curr_node] = node;
+            }
+        }
+    }
+    if(d[n]==INF)cout<<-1<<endl;
+    else{
+        vector<int>ans;
+        for(int i = n; i!=1; i = path[i]){
+            ans.push_back(i);
+        }
+        ans.push_back(1);
+        reverse(ans.begin(),ans.end());
+        for(int i = 0; i<ans.size(); i++){
+            cout<<ans[i]<<" ";
+        }
+        cout<<endl;
+    }
+    return 0;
+}
