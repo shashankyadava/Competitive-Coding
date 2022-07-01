@@ -1,0 +1,58 @@
+C. Valera and Tubes
+
+Valera has got a rectangle table consisting of n rows and m columns. Valera numbered the table rows starting from one, from top to bottom and the columns – starting from one, from left to right. We will represent cell that is on the intersection of row x and column y by a pair of integers (x, y).
+
+Valera wants to place exactly k tubes on his rectangle table. A tube is such sequence of table cells (x1, y1), (x2, y2), ..., (xr, yr), that:
+
+r ≥ 2;
+for any integer i (1 ≤ i ≤ r - 1) the following equation |xi - xi + 1| + |yi - yi + 1| = 1 holds;
+each table cell, which belongs to the tube, must occur exactly once in the sequence.
+Valera thinks that the tubes are arranged in a fancy manner if the following conditions are fulfilled:
+
+no pair of tubes has common cells;
+each cell of the table belongs to some tube.
+Help Valera to arrange k tubes on his rectangle table in a fancy manner.
+
+CODE::
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+ll a[100010][2];
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll n,m,k; cin>>n>>m>>k;
+    ll x = 1;
+    ll y = 1;
+    ll idx = 0;
+    while(x<=n){
+        a[idx][0] = x;
+        a[idx][1] = y;
+        idx++;
+        if(x%2==1){
+            y++;
+        }
+        else y--;
+        if(y>m){
+            y = m;
+            x++;
+        }
+        if(y<1){
+            y  = 1;
+            x++;
+        }
+    }
+    ll p = n*m-2*(k-1);
+    cout<<p<<" ";
+    for(int i = 0; i<p; i++){
+        cout<<a[i][0]<<" "<<a[i][1]<<" ";
+    }
+    cout<<endl;
+    while(p<n*m){
+        cout<<2<<" "<<a[p][0]<<" "<<a[p][1]<<" "<<a[p+1][0]<<" "<<a[p+1][1]<<endl; 
+        p+=2;
+    }
+    cout<<endl;
+    return 0;
+}
