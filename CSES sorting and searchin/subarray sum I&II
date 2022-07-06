@@ -1,0 +1,21 @@
+int main(){
+    //setIO("filename");
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll n,sum; cin>>n>>sum;
+    vector<ll>a(n);
+    for(int i = 0; i<n; i++){
+        cin>>a[i];
+    }
+    map<ll,ll>mp;
+    mp[0] = 1;
+    ll ss = 0;
+    ll ans = 0;
+    for(int i = 0; i<n; i++){
+        ss+=a[i];
+        ans+=mp[ss-sum];
+        mp[ss]++;
+    }
+    cout<<ans<<endl;
+    return 0;
+}
