@@ -1,0 +1,107 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+ll n,m;
+int dx[4] = {1,-1,0,0};
+int dy[4] = {0,0,1,-1};
+pair<int,int> path[1001][1001];
+ll dist[1001][1001];
+vector<vector<char>>a(1001,vector<char>(1001));
+queue<pair<int,int>>q;
+vector<char>ans;
+void retrace(int x,int y){
+    pair<int,int>origin = path[x][y];
+    if(origin.first==0&&origin.second==0)return;
+    if(origin.first==x+1)ans.push_back('U');
+    if(origin.first==x-1)ans.push_back('D');
+    if(origin.second==y+1)ans.push_back('L');
+    if(origin.second==y-1)ans.push_back('R');
+    retrace(origin.first,origin.second);
+}
+bool isvalid(int x,int y){
+    if(x>=n||y>=m||x<0||y<0)return false;
+    return true;
+}
+bool possible = false;
+bool flag = false;
+void bfs(){
+    while(!q.empty()){
+        int x = q.front().first;
+        int y = q.front().second;
+        q.pop();
+        for(int i = 0; i<4; i++){
+            int xx = x+dx[i];
+            int yy = y+dy[i];
+            if(isvalid(xx,yy)&&a[xx][yy]=='.'){
+                if(dist[x][y]+1<dist[xx][yy]){
+                    dist[xx][yy] = dist[x][y]+1;
+                    q.push({xx,yy});
+                    path[xx][yy] = {x,y};
+                }
+            }
+        }
+        if(flag&&(x==0||y==0||x==n-1||y==m-1)){
+            cout<<"YES"<<endl;
+            cout<<dist[x][y]<<endl;
+            retrace(x,y);
+            possible = true;
+            return;
+        }
+    }
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cin>>n>>m;
+    for(int i = 0; i<=1000; i++){
+        for(int j = 0; j<=1000; j++){
+            dist[i][j] = 1e9;
+        }
+    }
+    // for(int i = 0; i<n; i++){
+    //     for(int j = 0; j<m; j++){
+    //         cout<<dist[i][j]<<" ";
+    //     }
+    //     cout<<endl;
+    // }
+    pair<int,int>pos;
+    for(int i = 0; i<n; i++){
+        for(int j = 0; j<m; j++){
+            cin>>a[i][j];
+            if(a[i][j]=='A'){
+                pos.first = i;
+                pos.second = j;
+            }
+            if(a[i][j]=='M'){
+                q.push({i,j});
+                dist[i][j] = 0;
+            }
+            if(a[i][j]=='#'){
+                dist[i][j] = 0;
+            }
+        }
+    }
+    bfs();
+    flag = true;
+    path[pos.first][pos.second] = {0,0};
+    dist[pos.first][pos.second] = 0;
+    q.push({pos.first,pos.second});
+    bfs();
+    if(possible){
+        reverse(ans.begin(),ans.end());
+        for(int i = 0; i<ans.size(); i++){
+            cout<<ans[i];
+        }
+        cout<<endl;
+    }
+    else{
+        cout<<"NO"<<endl;
+    }
+    // for(int i = 0; i<n; i++){
+    //     for(int j = 0; j<m; j++){
+    //         cout<<dist[i][j]<<" ";
+    //     }
+    //     cout<<endl;
+    // }
+    return 0;
+}
