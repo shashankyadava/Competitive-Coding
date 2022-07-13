@@ -1,0 +1,69 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll n,m; cin>>n>>m;
+    m--;
+    string s; cin>>s;
+    int left = n-1,right = 0;
+    for(int i = 0; i<n/2; i++){
+        if(s[i]==s[n-i-1]){
+            continue;
+        }
+        // cout<<i<<endl;
+        left = min(left,i);
+        right = max(right,i);
+    }
+    int sum = 0;
+    for(int i = left; i<=right; i++){
+        if(s[i]!=s[n-i-1]){
+            // cout<<s[i]-'a'<<" "<<s[n-1-i]-'a'<<endl;
+            int mini = abs((s[n-1-i]-'a')-(s[i]-'a'));
+            int minii = abs(26-mini);
+            // cout<<mini<<" "<<minii<<endl;
+            // cout<<min(mini,minii)<<endl;
+            sum = sum+min(mini,minii);
+        }
+    }
+    // cout<<left<<" "<<right<<endl;
+    if(left>right){
+        cout<<"0"<<endl;
+    }
+    else{
+        if(m>=0&&m<=(n-1)/2){
+            if(m>=left&&m<=right){
+                sum+=min(right-left+m-left,right-left+right-m);
+                
+            }
+            else if(m>=right){
+                // cout<<left<<endl;
+                sum+=m-left;
+                // cout<<sum<<endl;
+            }
+            else if(m<=left){
+                sum+=right-m;
+            }
+        }
+        else if (m==(n-1)/2){
+            // cout<<m<<endl;
+            sum+=m-left;
+        }
+        else{
+            m = n-m-1;
+            // cout<<m<<endl;
+            if(m>=left&&m<=right){
+                sum+=min(right-left+m-left,right-left+right-m);
+            }
+            else if(m>=right){
+                sum+=m-left;
+            }
+            else if(m<=left){
+                sum+=right-m;
+            }
+        }
+        cout<<sum<<endl;
+    }
+    return 0;
+}
