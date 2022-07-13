@@ -1,0 +1,10 @@
+void retrace(int x,int y){
+    pair<int,int>origin = path[x][y];
+    if(origin.first==0&&origin.second==0)return;
+    if(origin.first==x+1)ans.push_back('U');
+    if(origin.first==x-1)ans.push_back('D');
+    if(origin.second==y+1)ans.push_back('L');
+    if(origin.second==y-1)ans.push_back('R');
+    retrace(origin.first,origin.second);
+}
+// add 0,0 at the begining position so the termination condition exist
