@@ -1,8 +1,8 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
-const int NINF = -1000000000;
-const int INF = 1000000000;
+const ll NINF = -1e17;
+const ll INF = 1e17;
 struct node{
     ll source;
     ll destination;
@@ -26,17 +26,17 @@ int main(){
         cin>>x>>y>>wt;
         g.push_back(node(x,y,-wt));
     }
-    for(int i = 1; i<=n-1; i++){
+    for(int i = 0; i<n; i++){
         for(auto it: g){
             if(dist[it.source]==INF)continue;
             dist[it.destination] = min(dist[it.source]+it.weight,dist[it.destination]);
-            dist[it.destination] = max(int(dist[it.destination]),NINF);
+            dist[it.destination] = max(dist[it.destination],NINF);
         }
     }
-    for(int i = 1; i<=n-1; i++){
+    for(int i = 0; i<n; i++){
         for(auto it:g){
             if(dist[it.source]==INF)continue;
-            dist[it.destination] = max((int)dist[it.destination],NINF);
+            dist[it.destination] = max(dist[it.destination],NINF);
             if(dist[it.source]+it.weight<dist[it.destination]){
                 dist[it.destination] = NINF;
             }
