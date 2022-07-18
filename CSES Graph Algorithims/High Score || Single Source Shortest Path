@@ -1,0 +1,48 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+const int NINF = -1000000000;
+const int INF = 1000000000;
+struct node{
+    ll source;
+    ll destination;
+    ll weight;
+    node(int first,int second,int wt){
+        source = first;
+        destination = second;
+        weight = wt;
+    }
+};
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll n,m; cin>>n>>m;
+    vector<node>g;
+    ll dist[100005];
+    for(int i = 0; i<=n; i++)dist[i] = INF;
+    dist[1] = 0;
+    for(int i = 0; i<m; i++){
+        ll x,y,wt;
+        cin>>x>>y>>wt;
+        g.push_back(node(x,y,-wt));
+    }
+    for(int i = 1; i<=n-1; i++){
+        for(auto it: g){
+            if(dist[it.source]==INF)continue;
+            dist[it.destination] = min(dist[it.source]+it.weight,dist[it.destination]);
+            dist[it.destination] = max(int(dist[it.destination]),NINF);
+        }
+    }
+    for(int i = 1; i<=n-1; i++){
+        for(auto it:g){
+            if(dist[it.source]==INF)continue;
+            dist[it.destination] = max((int)dist[it.destination],NINF);
+            if(dist[it.source]+it.weight<dist[it.destination]){
+                dist[it.destination] = NINF;
+            }
+        }      
+    }
+    if(dist[n]==NINF)cout<<"-1"<<endl;
+    else cout<<dist[n]*(-1)<<endl;
+    return 0;
+}
