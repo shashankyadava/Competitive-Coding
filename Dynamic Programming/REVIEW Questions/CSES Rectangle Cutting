@@ -1,0 +1,23 @@
+int dp[1000][1000];
+int recur(int n,int m){
+    if(n==m)return dp[n][m] = 0;
+    if(dp[n][m]!=-1)return dp[n][m];
+    int ans = INT_MAX;
+    for(int i = 1; i<n; i++){
+        ans = min(ans,recur(i,m)+recur(n-i,m)+1);
+    }
+    for(int i = 1; i<m; i++){
+        ans = min(ans,recur(n,i)+recur(n,m-i)+1);
+    }
+    return dp[n][m] = ans;
+
+}
+int main(){
+    //setIO("filename");
+    ios_base::sync_with_stdio(0);
+    cin.tie(0); 
+    ll n,m; cin>>n>>m;
+    memset(dp,-1,sizeof(dp));
+    cout<<recur(n,m)<<endl;
+    return 0;
+}
