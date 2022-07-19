@@ -1,0 +1,42 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+const ll INF = 1e17;
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll n,m; cin>>n>>m;
+    ll q; cin>>q;
+    // implement floyd-Warshall
+    ll dp[n+1][n+1];
+    for(int i = 0; i<=n; i++){
+        for(int j = 0; j<=n; j++){
+            if(i==j){
+                dp[i][j] = 0;
+            }
+            else{
+                dp[i][j] = INF;
+            }
+        }
+    }
+    for(int i = 0; i<m; i++){
+        ll x,y,wt; cin>>x>>y>>wt;
+        dp[x][y] = min(dp[x][y],wt);
+        dp[y][x] = min(dp[y][x],wt);
+    }
+    for(int k = 1; k<=n; k++){
+        for(int i = 1; i<=n; i++){
+            for(int j = 1; j<=n; j++){
+                if(dp[i][k]<INF&&dp[k][j]<INF)
+                dp[i][j] = min(dp[i][j],dp[i][k]+dp[k][j]);
+
+            }
+        }
+    }
+    while(q--){
+        ll city_a,city_b; cin>>city_a>>city_b;
+        cout<<(dp[city_a][city_b]==INF?-1:dp[city_a][city_b])<<endl;
+
+    }
+    return 0;
+}
