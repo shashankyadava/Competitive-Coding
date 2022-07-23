@@ -1,0 +1,27 @@
+class Solution {
+public:
+    bool canPartitionKSubsets(vector<int>& nums, int k) {
+        int n = nums.size();
+        int num = (1<<16)+2;
+        int dp[num];
+        for(int i = 0; i<num; i++)dp[i] = -1;
+        int sum = 0;
+        for(int i = 0; i<nums.size(); i++){
+            sum+=nums[i];
+        }
+        int target = sum/k;
+        if(sum%k)return false;
+        dp[0] = 0;
+        for(int mask = 0; mask<(1<<n); mask++){
+            if(dp[mask]==-1)continue;
+            for(int j = 0; j<n; j++){
+                if(!(mask&(1<<j))&&dp[mask]+nums[j]<=target){
+                    dp[mask|(1<<j)] = (dp[mask]+nums[j])%target;
+                }
+            }
+        }
+        // for(int i = 0; i<n; i++)cout<<dp[i]<<" ";
+        // cout<<endl;
+        return dp[(1<<n)-1]==0;
+    }
+};
