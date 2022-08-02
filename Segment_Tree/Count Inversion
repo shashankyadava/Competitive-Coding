@@ -1,0 +1,36 @@
+#include<bits/stdc++.h>
+class Solution {
+public:
+    vector<int>seg;
+    void update(int indx,int low,int high,int i){
+        if(low==high){
+            seg[indx]++;
+            return;
+        }
+        int mid = (low+high)/2;
+        if(i<=mid){
+            update(2*indx+1,low,mid,i);
+        }
+        else update(2*indx+2,mid+1,high,i);
+        seg[indx] = seg[2*indx+1]+seg[2*indx+2];
+    }
+    int query(int indx,int low,int high,int l,int r){
+        if(high<l||low>r)return 0;// no overlap
+        if(low>=l&&high<=r)return seg[indx];// partial overlap
+        int mid = (low+high)/2;
+        int left = query(2*indx+1,low,mid,l,r);
+        int right = query(2*indx+2,mid+1,high,l,r);
+        return left+right;
+    }
+    vector<int> countSmaller(vector<int>& nums) {
+        int n = nums.size();
+        seg.resize(4*(2*10000+2),0);
+        vector<int>res(nums.size());
+        for(int i = n-1; i>=0; i--){
+            nums[i] = nums[i]+10001;
+            res[i] = query(0,0,2*10000+1,0,nums[i]-1);
+            update(0,0,2*10000+1,nums[i]);
+        }
+        return res;
+    }
+};
