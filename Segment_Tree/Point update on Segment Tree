@@ -1,0 +1,49 @@
+class NumArray {
+public:
+    vector<int>seg;
+    int n;
+    void build(int indx,int low,int high,vector<int>&arr){
+        if(low==high){
+            seg[indx] = arr[low];
+            return;
+        }
+        int mid = (low+high)/2;
+        build(2*indx+1,low,mid,arr);
+        build(2*indx+2,mid+1,high,arr);
+        seg[indx] = seg[2*indx+1]+seg[2*indx+2];
+    }
+    void updatee(int indx,int low,int high,int i,int val){
+        if(low==high){
+            seg[indx] = val;
+            return;
+        }
+        int mid = (low+high)/2;
+        if(i<=mid){
+            updatee(2*indx+1,low,mid,i,val);
+        }
+        else updatee(2*indx+2,mid+1,high,i,val);
+        seg[indx] = seg[2*indx+1]+seg[2*indx+2];
+    }
+    int query(int indx,int low,int high,int l,int r){
+        if(high<l||low>r)return 0;// no-overlap
+        if(low>=l&&high<=r)return seg[indx];
+        int mid = (low+high)/2;
+        int left = query(2*indx+1,low,mid,l,r);
+        int right = query(2*indx+2,mid+1,high,l,r);
+        return left+right;
+    }
+    NumArray(vector<int>& arr) {
+        n = arr.size();
+        seg.resize(4*n+1,0);
+        build(0,0,arr.size()-1,arr);
+    }
+    
+    void update(int index, int val) {
+        updatee(0,0,n-1,index,val);
+    }
+    
+    int sumRange(int left, int right) {
+        return query(0,0,n-1,left,right);
+    } 
+};
+
