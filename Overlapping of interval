@@ -1,0 +1,2 @@
+max(start1,start2)<min(end1,end2)
+// this is done to determine sub interval 
