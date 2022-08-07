@@ -1,0 +1,38 @@
+A 0-indexed array a of size n is called good if for all valid indices i (0≤i≤n−1), ai+i is a perfect square†.
+
+Given an integer n. Find a permutation‡ p of [0,1,2,…,n−1] that is good or determine that no such permutation exists.
+
+† An integer x is said to be a perfect square if there exists an integer y such that x=y2.
+
+‡ An array b is a permutation of an array a if b consists of the elements of a in arbitrary order. For example, [4,2,3,4] is a permutation of [3,2,4,4] while [1,2,2] is not a permutation of [1,2,3].
+
+CODE::
+
+int ans[100005];
+void recur(int r){
+    if(r<0)return;
+    int s = sqrt(2*r);
+    s = s*s;
+    int l = s-r;
+    recur(l-1);
+    for(; l<=r; l++,r--){
+        ans[l] = r;
+        ans[r] = l;
+    }
+}
+int main(){
+    //setIO("filename");
+    ios_base::sync_with_stdio(0);
+    cin.tie(0); 
+    ll t; cin>>t; 
+    while(t--){
+        ll n; cin>>n;
+        memset(ans,0,sizeof(ans));
+        recur(n-1);
+        for(int i = 0; i<n; i++){
+            cout<<ans[i]<<" ";
+        }
+        cout<<endl;
+    }
+    return 0;
+}
