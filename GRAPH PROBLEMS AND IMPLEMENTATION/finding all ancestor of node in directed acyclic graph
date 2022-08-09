@@ -1,0 +1,54 @@
+You are given a positive integer n representing the number of nodes of a Directed Acyclic Graph (DAG). The nodes are numbered from 0 to n - 1 (inclusive).
+
+You are also given a 2D integer array edges, where edges[i] = [fromi, toi] denotes that there is a unidirectional edge from fromi to toi in the graph.
+
+Return a list answer, where answer[i] is the list of ancestors of the ith node, sorted in ascending order.
+
+A node u is an ancestor of another node v if u can reach v via a set of edges.
+
+CODE::
+
+class Solution {
+public:
+    set<int>st[100005];
+    void topo(vector<int>g[],vector<int>&indeg,int n){
+        queue<int>q;
+        for(int i = 0; i<n; i++){
+            if(indeg[i]==0){
+                q.push(i);
+            }
+        }
+        for(int i = 0; i<n; i++)st[i].clear();
+        while(!q.empty()){
+            int parent = q.front();
+            q.pop();
+            for(auto child: g[parent]){
+                st[child].insert(parent);
+                for(auto ancestor: st[parent]){
+                    st[child].insert(ancestor);
+                }
+                indeg[child]--;
+                if(indeg[child]==0){
+                    q.push(child);
+                }
+            }
+        }
+    }
+    vector<vector<int>> getAncestors(int n, vector<vector<int>>& edges) {
+        vector<int>g[n];
+        vector<int>indeg(n,0);
+        for(int i = 0; i<edges.size(); i++){
+            int x = edges[i][0];
+            int y = edges[i][1];
+            g[x].push_back(y);
+            indeg[y]++;
+        }
+        vector<vector<int>>ans(n,vector<int>());
+        topo(g,indeg,n);
+        for(int i = 0; i<n; i++){
+            ans[i] = vector<int>(st[i].begin(),st[i].end());
+        }
+        return ans;
+        
+    }
+};
