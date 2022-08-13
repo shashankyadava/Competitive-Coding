@@ -1,0 +1,20 @@
+the technique is basically is that if we have to find ar-al = r-l+1 or when some target is given and we have to find number of subarray or the presence of subarray then 
+what we can do is use this techinque;
+
+first what you do is make the prefix sum of array 
+then take a map
+ans+=mp[prefix sum upto that i-target]
+mp[prefix sum upto that i-target]++;
+cout<<ans<<endl;
+
+NOW There can be many variations regarding that
+prefix[r]-prefix[l] = r-l+1;
+so what we can do is r-l+1 becomes the target;
+we change the formula 
+
+prefix[r]-(r+1) = prefix-(l+1);
+
+which can be used in this technique;
+
+ans+=mp[prefix[i]-(i+1)]
+mp[prefix[i]-(i+1)]++;
