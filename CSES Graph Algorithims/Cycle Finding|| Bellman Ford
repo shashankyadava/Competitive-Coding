@@ -1,0 +1,51 @@
+int main(){
+    //setIO("filename");
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll n,m; cin>>n>>m;
+    vector<pair<ll,pair<ll,ll>>>v;
+    for(int i = 0; i<m; i++){
+        ll a,b,w; cin>>a>>b>>w;
+        v.push_back({a,{b,w}});
+    }
+    ll dist[n+1];
+    ll relaxation[n+1];
+    for(int i = 0; i<=n; i++)relaxation[i] = -1;
+    for(int i = 0; i<=n; i++)dist[i] = INF;
+    int x;
+    for(int i = 1; i<=n; i++){
+        x = -1;
+        for(auto it: v){
+            ll destination = it.second.first;
+            ll source = it.first;
+            ll weight = it.second.second;
+            if(dist[source]+weight<dist[destination]){
+                dist[destination] = dist[source]+weight;
+                relaxation[destination] = source;
+                x = destination;
+            }
+        }
+    }
+    if(x==-1){
+        cout<<"NO"<<nline;
+    }
+    else{
+        cout<<"YES"<<nline;
+        for(int i = 1; i<=n; i++){
+            x = relaxation[x];
+        }
+        vector<ll>cycle;
+        for(int v = x; ;v = relaxation[v]){
+            cycle.push_back(v);
+            if(v==x&&cycle.size()>1){
+                break;
+            }
+        }
+        reverse(cycle.begin(),cycle.end());
+        for(int i = 0; i<cycle.size(); i++){
+            cout<<cycle[i]<<" ";
+        }
+        cout<<nline;
+    }
+    return 0;
+}
