@@ -18,11 +18,11 @@ public:
         }
         int l = recur(root->left);
         int r = recur(root->right);
-        maxx = max(maxx,l+r+1);
+        maxx = max(maxx,l+r);
         return 1+max(l,r);
     }
     int diameterOfBinaryTree(TreeNode* root) {
         recur(root);
-        return maxx-1;
+        return maxx;
     }
 };
