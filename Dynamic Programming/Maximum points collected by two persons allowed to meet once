@@ -1,0 +1,126 @@
+Given a 2-D matrix A[N][M] where A[i][j] denotes the points available on this cell. Two persons, P1 and P2, start from two corners of this matrix. P1 starts from top left and needs to reach bottom right. On the other hand, P2 starts bottom left and needs to reach top right. P1 can move right and down. P2 can right and up. As they visit a cell, points A[i][j] are added to their total. The task is to maximize the sum of total points collected by both of them under the condition that they shall meet only once and the cost of this cell shall not be included in either of their total.
+
+Examples: 
+
+Input : A[][] = { {100, 100, 100},
+                   {100, 1, 100},
+                   {100, 100, 100}};
+Output : 800
+P1 needs to go from (0,0) to (2,2)
+P2 needs to go from (2,0) to (0,2)
+Explanation: P1 goes through A[0][0]->A[0][1]->A[1][1]->
+                             A[2][1]->A[2][2]. 
+             P2 goes through A[2][0]->A[1][0]->A[1][1]->
+                             A[1][2]->A[0][2].
+They meet at A[1][1]. So total points collected: 
+A[0][0] + A[0][1] + A[2][1] + A[2][2] + 
+A[2][0] + A[1][0] + A[1][2] + A[0][2] = 800
+
+
+Input : A[][] = {{100, 100, 100, 100},
+                 {100, 100, 100, 100},
+                 {100, 0, 100, 100},
+                 {100, 100, 100, 100}};
+Output : 1200
+Recommended: Please try your approach on {IDE} first, before moving on to the solution.
+P1 needs to move from top left (0, 0) to bottom right (n-1, m-1). P1 can move right and down, i.e., from A[i][j] to A[i][j+1] or A[i+1][j] 
+P2 needs to move from bottom left (n-1, 0) to top right (0, m-1). P2 can move right and up, i.e., from A[i][j] to A[i][j+1] or A[i-1][j].
+
+The idea is to consider every point as a meeting point and find maximum of all meeting points. When we consider a point A[i][j] as meeting point, we need to have following four values to find maximum total points collected when A[i][j] is meeting point.
+
+Points collected by P1 from (0, 0) to (i, j). 
+Points collected by P1 from (i, j) to (n-1, m-1). 
+Points collected by P2 from (n-1, 0) to (i, j). 
+Points collected by P2 from (i, j) to (0, m-1).
+We can compute above four values using Dynamic Programming. Once we have above four values for every point, we can find maximum points at every meeting point.
+
+For every meeting points, there are two possible values to reach it and leave it as we are allowed to have only one meeting point. 
+
+P1 reaches it through a right move and p2 through a up move and they leave same way also. 
+P1 reaches it through a down move and p2 through a right move and they leave same way also. 
+We take maximum of above two values to find optimal points at this meeting point.
+
+Finally, we return maximum of all meeting points. 
+
+Implementation:
+
+
+// C++ program to find maximum points that can
+// be collected by two persons in a matrix.
+#include<bits/stdc++.h>
+#define M 3
+#define N 3
+using namespace std;
+ 
+int findMaxPoints(int A[][M])
+{
+    // To store points collected by Person P1
+    // when he/she begins journey from start and
+    // from end.
+    int P1S[M+1][N+1], P1E[M+1][N+1];
+    memset(P1S, 0, sizeof(P1S));
+    memset(P1E, 0, sizeof(P1E));
+ 
+    // To store points collected by Person P2
+    // when he/she begins journey from start and
+    // from end.
+    int P2S[M+1][N+1], P2E[M+1][N+1];
+    memset(P2S, 0, sizeof(P2S));
+    memset(P2E, 0, sizeof(P2E));
+ 
+    // Table for P1's journey from
+    // start to meeting cell
+    for (int i=1; i<=N; i++)
+        for (int j=1; j<=M; j++)
+            P1S[i][j] = max(P1S[i-1][j],
+                  P1S[i][j-1]) + A[i-1][j-1];
+ 
+    // Table for P1's journey from
+    // end to meet cell
+    for (int i=N; i>=1; i--)
+        for (int j=M; j>=1; j--)
+            P1E[i][j] = max(P1E[i+1][j],
+                  P1E[i][j+1]) + A[i-1][j-1];
+ 
+    // Table for P2's journey from start to meeting cell
+    for (int i=N; i>=1; i--)
+        for(int j=1; j<=M; j++)
+            P2S[i][j] = max(P2S[i+1][j],
+                  P2S[i][j-1]) + A[i-1][j-1];
+ 
+    // Table for P2's journey from end to meeting cell
+    for (int i=1; i<=N; i++)
+        for (int j=M; j>=1; j--)
+            P2E[i][j] = max(P2E[i-1][j],
+                  P2E[i][j+1]) + A[i-1][j-1];
+ 
+    // Now iterate over all meeting positions (i,j)
+    int ans = 0;
+    for (int i=2; i<N; i++)
+    {
+        for (int j=2; j<M; j++)
+        {
+            int op1 = P1S[i][j-1] + P1E[i][j+1] +
+                      P2S[i+1][j] + P2E[i-1][j];
+            int op2 = P1S[i-1][j] + P1E[i+1][j] +
+                      P2S[i][j-1] + P2E[i][j+1];
+            ans = max(ans, max(op1, op2));
+        }
+    }
+    return ans;
+}
+ 
+// Driver code
+int main()
+{
+    //input the calories burnt matrix
+    int A[][M] = {{100, 100, 100},
+                  {100, 1, 100},
+                  {100, 100, 100}};
+    cout << "Max Points : " << findMaxPoints(A);
+    return 0;
+}
+Output
+Max Points : 800
+Time Complexity : O(N * M) 
+Auxiliary Space : O(N * M)
