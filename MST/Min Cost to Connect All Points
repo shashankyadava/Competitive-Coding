@@ -1,0 +1,52 @@
+class Solution {
+public:
+    vector<int>parent;
+    vector<int>r;
+    int f(int a){
+        if(parent[a]<0)return a;
+        return parent[a] = f(parent[a]);
+    }
+    bool flag = false;
+    void u(int a,int b){
+        int x = f(a);
+        int y = f(b);
+        if(x==y)return;
+        flag = true;
+        if(r[y]>r[x]){
+            swap(x,y);
+        }
+        if(r[x]==r[y])r[x]++;
+        parent[y] = x;
+    }
+    static bool comp(pair<int,pair<int,int>>&a,pair<int,pair<int,int>>&b){
+        if(a.first<b.first)return true;
+        else return false;
+    }
+    int minCostConnectPoints(vector<vector<int>>& v) {
+        int n = v.size();
+        parent.resize(1000005,-1);
+        r.resize(1000005,0);
+        vector<pair<int,pair<int,int>>>res;
+        for(int i = 0; i<n; i++){
+            int x = v[i][0];
+            int y = v[i][1];
+            for(int j = i+1; j<n; j++){
+                int dist = abs(v[j][0]-x)+abs(v[j][1]-y);
+                res.push_back({dist,{i,j}});   
+            }
+        }
+        sort(res.begin(),res.end(),comp);
+        int ans = 0;
+        for(int i = 0; i<res.size(); i++){
+            int x = res[i].second.first;
+            int y = res[i].second.second;
+            flag = false;
+            u(x,y);
+            if(flag){
+                ans+=res[i].first;
+            }
+            
+        }
+        return ans;
+    }
+};
