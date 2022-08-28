@@ -1,0 +1,32 @@
+typedef tuple<int,int,int> ti;
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int K) {
+        int dist[n];
+        for(int i = 0; i<n; i++){
+            dist[i] = 1e9;
+        }
+        dist[src] = 0;
+        
+        for(int i = 0; i<=K; i++){
+            int temp[n];
+            for(int j = 0; j<n; j++){
+                temp[j] = dist[j];
+            }
+            for(int j = 0; j<flights.size(); j++){
+                int s = flights[j][0];
+                int d = flights[j][1];
+                int p = flights[j][2];
+                if(dist[s]==1e9)continue;
+                if(dist[s]+p<temp[d]){
+                    temp[d] = dist[s]+p;
+                }
+            }
+            for(int j = 0; j<n; j++){
+                dist[j] = temp[j];
+            }
+            
+        }
+        return (dist[dst]==1e9?-1:dist[dst]);
+    }
+};
