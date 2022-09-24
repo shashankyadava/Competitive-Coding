@@ -1,0 +1,21 @@
+Given an integer n, return the decimal value of the binary string formed by concatenating the binary representations of 1 to n in order, modulo 109 + 7.
+
+class Solution {
+public:
+    
+    int numberOfBits(int n) {
+		  return log2(n) + 1;
+    }
+    
+    int concatenatedBinary(int n) {
+        long ans = 0, MOD = 1e9 + 7;
+        
+        for (int i = 1; i <= n; ++i) {
+            int len = numberOfBits(i);
+            ans = ((ans << len) % MOD + i) % MOD;
+        }
+        return ans;
+    }
+};
+
+move ans to left shift by len of the incoming number and then add that number// great point to remember
