@@ -1,0 +1,31 @@
+Code::
+
+You have n dice and each die has k faces numbered from 1 to k.
+Given three integers n, k, and target, return the number of possible ways (out of the kn total ways) to roll the dice so the sum of the face-up numbers equals target. 
+Since the answer may be too large, return it modulo 109 + 7.
+
+Solution::
+
+#define mod 1000000007
+class Solution {
+public:
+    int dp[31][1001];
+    int recur(int n,int k,int target){
+        if(target==0||n==0){
+            if(n==0&&target==0)return 1;
+            else return 0;
+        }
+        if(dp[n][target]!=-1)return dp[n][target];
+        int ans = 0;
+        for(int i = 1; i<=k; i++){
+            if(target-i>=0){
+                ans = (ans+recur(n-1,k,target-i))%mod;
+            }
+        }
+        return dp[n][target] = ans%mod;
+    }
+    int numRollsToTarget(int n, int k, int target) {
+        memset(dp,-1,sizeof(dp));
+        return recur(n,k,target)%mod;
+    }
+};
