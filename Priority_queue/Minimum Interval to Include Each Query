@@ -1,0 +1,35 @@
+You are given a 2D integer array intervals, where intervals[i] = [lefti, righti] describes the ith interval starting at lefti and ending at righti (inclusive). 
+The size of an interval is defined as the number of integers it contains, or more formally righti - lefti + 1.
+
+You are also given an integer array queries. The answer to the jth query is the size of the smallest interval i such that lefti <= queries[j] <= righti. 
+If no such interval exists, the answer is -1.
+
+Return an array containing the answers to the queries.
+
+ class Solution {
+public:
+    vector<int> minInterval(vector<vector<int>>& v, vector<int>& aq) {
+        unordered_map<int,int>mp;
+        vector<int>res;
+        vector<int>q = aq;
+        sort(v.begin(),v.end());
+        sort(q.begin(),q.end());
+        int j = 0;
+        priority_queue< vector<int>, vector<vector<int>>, greater<vector<int>> >qq;
+        for(int i = 0; i<q.size(); i++){
+            while(j<v.size()&&v[j][0]<=q[i]){
+                int l = v[j][0],r = v[j][1];
+                qq.push({r-l+1,r});
+                j++;
+            }
+            while(!qq.empty()&&qq.top()[1]<q[i]){
+                qq.pop();
+            }
+            mp[q[i]] = qq.size()?qq.top()[0]:-1;
+        }
+        for(int i = 0; i<aq.size(); i++){
+            res.push_back(mp[aq[i]]);
+        }
+        return res;
+    }
+};
