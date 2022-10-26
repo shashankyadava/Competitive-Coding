@@ -1,0 +1,44 @@
+Given an integer array nums and an integer k, return true if nums has a continuous subarray of size at least two whose elements sum up to a multiple of k,
+or false otherwise.
+
+An integer x is a multiple of k if there exists an integer n such that x = n * k. 0 is always a multiple of k.
+
+math behind this problem:
+Haven't seen anyone post the math or theory behind the solutions yet, so I'm sharing mine. Let me know if there is any better one.
+In short, start with mod =0, then we always do mod = (mod+nums[i])%k, if mod repeats, that means between these two mod = x occurences the sum is multiple of k.
+Math: c = a % k, c = b % k, so we have a % k = b % k.
+Where a is the mod at i and b is the mod at j and a <= b, i < j, because all nums are non-negative. And c is the mod that repeats.
+Suppose b-a=d, then we have b % k = ((a+d) % k)%k = (a%k + d%k)%k
+In order to make the equation valid: a % k = (a%k + d%k)%k
+d%k has to be 0, so d, the different between b and a, is a multiple of k
+Example:
+[23, 2, 1, 6, 7] k=9
+mod = 5, 7, 8, 5 <-- at here we found it
+
+CODE::
+
+class Solution {
+public:
+    bool checkSubarraySum(vector<int>& nums, int k) {
+        if(nums.size()<2)return false;
+        int n = nums.size();
+        map<int,int>mp;
+        mp[0] = -1;
+        int sum = 0;
+        for(int i = 0; i<n; i++){
+            sum = sum+nums[i];
+            if(k!=0){
+                sum = sum%k;
+            }
+            if(mp.find(sum)!=mp.end()){
+                if(i-mp[sum]>1){
+                    return true;
+                }
+            }
+            else{
+                mp[sum] = i;
+            }
+        }
+        return  false;
+    }
+};
