@@ -1,0 +1,98 @@
+You are given an integer array target. You have an integer array initial of the same size as target with all elements initially zeros.
+
+In one operation you can choose any subarray from initial and increment each value by one.
+
+Return the minimum number of operations to form a target array from initial.
+
+The test cases are generated so that the answer fits in a 32-bit integer.
+
+ CODE::
+ 
+
+class Solution {
+public:
+    int minNumberOperations(vector<int>& v) {
+        int n = v.size();
+        vector<int>ans;
+        int maxx = 0;
+        int j = 0;
+        for(int i = 0; i<n; i++){
+            if(i<n-1&&v[i]==v[i+1]){
+                j = i;
+                int x = v[i];
+                while(j<n&&x==v[j]){
+                    j++;
+                }
+                if(i>0&&j<n&&v[i]<v[i-1]&&v[j]>v[i]){
+                    ans.push_back(maxx);
+                    ans.push_back(v[i]);
+                    maxx = v[i];
+                }
+                else maxx = max(maxx,v[i]);
+                i = j-1;
+            }
+            else if(i>0&&i<n-1&&v[i]<v[i-1]&&v[i+1]>v[i]){
+                ans.push_back(maxx);
+                ans.push_back(v[i]);
+                maxx = v[i];
+            }
+            else maxx = max(maxx,v[i]);
+        }
+        ans.push_back(maxx);
+        int maxi = 0;
+        int prev = 0;
+        long long int sum1 = 0,sum2 = 0;
+        for(int i = 0; i<ans.size(); i++){
+            if(i%2){
+                sum2+=ans[i];
+            }
+            else sum1+=ans[i];
+        }
+        int sum = 0;
+        return sum1-sum2;
+    }
+};
+
+Some great solutions::
+
+Explanation
+Whenever the current element a is bigger than the previous element,
+we need at lease a - pre operations to make this difference.
+
+We accumulate the total number of the operations,
+this result is a lower bound and it's feasible.
+
+
+Complexity
+Time O(N)
+Space O(1)
+
+
+Java
+
+    public int minNumberOperations(int[] A) {
+        int res = 0, pre = 0;
+        for (int a: A) {
+            res += Math.max(a - pre, 0);
+            pre = a;
+        }
+        return res;
+    }
+C++
+
+    int minNumberOperations(vector<int>& A) {
+        int res = 0, pre = 0;
+        for (int a: A) {
+            res += max(a - pre, 0);
+            pre = a;
+        }
+        return res;
+    }
+Python
+
+    def minNumberOperations(self, A):
+        res = pre = 0
+        for a in A:
+            res += max(a - pre, 0)
+            pre = a
+        return res
