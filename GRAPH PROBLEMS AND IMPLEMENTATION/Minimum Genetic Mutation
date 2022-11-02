@@ -12,7 +12,7 @@ mutation, return -1.
 Note that the starting point is assumed to be valid, so it might not be included in the bank.
 
 CODE::
-
+####BFS
 class Solution {
 public:
     bool check(string a,string b){
@@ -47,5 +47,89 @@ public:
             count++;
         }
         return -1;
+    }
+};
+
+####DFS
+
+class Solution {
+public:
+    int n;
+    vector<bool>vis;
+    bool check(string a,string b){
+        int count = 0;
+        for(int i = 0; i<a.size(); i++){
+            if(a[i]!=b[i])count++;
+        }
+        if(count==1)return true;
+        return false;
+    }
+    int recur(string temp,string end,vector<string>& bank){
+        if(temp==end)return 0;
+        int minn = 1e8;
+        for(int i = 0; i<n; i++){
+             if(check(temp,bank[i])){
+                 if(vis[i]==0){
+                     vis[i] = 1;
+                     minn = min(minn,1+recur(bank[i],end,bank));
+                     vis[i] = 0;
+                 }
+             }
+        }
+        return minn;
+    }
+    
+    int minMutation(string start, string end, vector<string>& bank) {
+        n = bank.size();
+        vis.resize(n,0);
+        int ans = recur(start,end,bank);
+        if(ans>=1e8)return -1;
+        else return ans;
+    }
+};
+
+####GRAPH APPROACH
+
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& v){
+        v.push_back(beginWord);
+        int n = v.size();
+        map<string,vector<string>>g;
+        for(int i = 0; i<n; i++){
+            string ss = v[i];
+            for(int j = 0; j<n; j++){
+                if(j!=i){
+                    string aa = v[j];
+                    int count = 0;
+                    for(int x = 0; x<aa.size(); x++){
+                        if(aa[x]!=ss[x]){
+                            count++;
+                        }
+                    }
+                    if(count==1){
+                        g[ss].push_back(aa);
+                    }
+                }
+            }
+        }
+        queue<string>q;
+        q.push(beginWord);
+        map<string,int>level;
+        for(int i = 0; i<n; i++){
+            level[v[i]] = 1e9;
+        }
+        level[beginWord] = 1;
+        while(!q.empty()){
+            string parent = q.front();
+            q.pop();
+            for(auto child: g[parent]){
+                if(level[child]>1+level[parent]){
+                    level[child] = 1+level[parent];
+                    q.push(child);
+                }
+            }
+        }
+        return (level[endWord]==1e9?0:level[endWord]);
     }
 };
