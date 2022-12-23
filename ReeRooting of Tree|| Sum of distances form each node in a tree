@@ -1,0 +1,49 @@
+There is an undirected connected tree with n nodes labeled from 0 to n - 1 and n - 1 edges.
+
+You are given the integer n and the array edges where edges[i] = [ai, bi] indicates that there is an edge between nodes ai and bi in the tree.
+
+Return an array answer of length n where answer[i] is the sum of the distances between the ith node in the tree and all other nodes.
+
+CODE::
+
+
+class Solution {
+public:
+    vector<int>res;
+    vector<int>count;
+    int N;
+    void dfs(int u,int v,vector<int>g[]){
+        for(auto child:g[u]){
+            if(child!=v){
+                dfs(child,u,g);
+                count[u]+=count[child];
+                res[u]+=res[child]+count[child];
+            }
+        }
+        count[u]+=1;
+    }
+    void dfs2(int u,int v,vector<int>g[]){
+        for(auto child:g[u]){
+            if(child!=v){
+               res[child] = res[u]-count[child]+N-count[child];
+                dfs2(child,u,g);
+            }
+        }
+    }
+    vector<int> sumOfDistancesInTree(int n, vector<vector<int>>& e) {
+        N = n;
+        vector<int>g[n];
+        for(int i = 0; i<e.size(); i++){
+            int x = e[i][0];
+            int y = e[i][1];
+            g[x].push_back(y);
+            g[y].push_back(x);
+        }
+        res.resize(n,0);
+        count.resize(n,0);
+        dfs(0,-1,g);
+        dfs2(0,-1,g);
+        return res;
+        
+    }
+};
