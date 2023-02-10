@@ -1,0 +1,26 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+int x,y,GCD;
+void modulo_inverse(ll a,ll b){
+    if(b==0){
+        x = 1;
+        y = 0;
+        GCD = a;
+        return;
+    }
+    modulo_inverse(b,a%b);
+    int cX = y;
+    int cY = x-(a/b)*y;
+
+    x = cX;
+    y = cY;
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll n; cin>>n;
+    modulo_inverse(n,1000000007);
+    cout<<(x+1000000007)%1000000007<<endl;
+    return 0;
+}
