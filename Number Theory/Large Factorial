@@ -1,0 +1,31 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long 
+ll arr[1000];
+void multiply(ll &len, ll no){
+    ll carry = 0;
+    for(int i = 0; i<len; i++){
+        ll num = arr[i]*no+carry;
+        arr[i] = num%10;
+        carry = num/10;
+        // cout<<arr[i]<<endl;
+    }
+    while(carry){
+        arr[len] = carry%10;
+        carry = carry/10;
+        len++;
+    }
+}
+int main(){
+    ll n; cin>>n;
+    for(int i = 0; i<1000; i++)arr[i] = 0;
+    ll len = 1;
+    arr[0] = 1;
+    for(int i = 2; i<=n; i++){
+        multiply(len,i);
+    }
+
+    for(int i = len-1; i>=0; i--)cout<<arr[i];
+    cout<<endl;
+    return 0;
+}
