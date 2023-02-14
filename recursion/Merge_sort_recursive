@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long 
+
+void merge(int *a,int l,int r){
+    int mid = (l+r)/2;
+    int temp[100];
+    
+    int i = l;
+    int j = mid+1;
+    int k = l;
+    
+    while(i<=mid && j<=r){
+        if(a[i]<a[j]){
+            temp[k++] = a[i++];
+        }
+        else temp[k++] = a[j++];
+    }
+    while(i<=mid){
+        temp[k++] = a[i++];
+    }
+    while(j<=r){
+        temp[k++] = a[j++];
+    }
+    for(int i = l; i<=r; i++){
+        a[i] = temp[i];
+    }
+}
+
+void merge_sort(int *a,int l,int r){
+    if(l>=r)return;
+    int mid = (l+r)/2;
+    // dividing array 
+    merge_sort(a,l,mid);
+    merge_sort(a,mid+1,r);
+    // merging array
+    merge(a,l,r);
+    
+    
+}
+
+int main()
+{
+    int arr[100];
+    int n; cin>>n;
+    for(int i = 0; i<n; i++)cin>>arr[i];
+    merge_sort(arr,0,n-1);
+    for(int i = 0; i<n; i++)cout<<arr[i];
+
+    return 0;
+}
