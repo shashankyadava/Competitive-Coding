@@ -1,0 +1,24 @@
+You are given an integer array nums and two integers minK and maxK.
+
+A fixed-bound subarray of nums is a subarray that satisfies the following conditions:
+
+The minimum value in the subarray is equal to minK.
+The maximum value in the subarray is equal to maxK.
+Return the number of fixed-bound subarrays.
+
+A subarray is a contiguous part of an array.
+
+CODE::
+
+var countSubarrays = function(nums, minK, maxK) {
+    const n = nums.length;
+    var jbad = -1,jmax = -1,jmin = -1;
+    var res = 0;
+    for(var i = 0; i<n; i++){
+        if(nums[i]<minK||nums[i]>maxK)jbad = i;
+        if(nums[i]==minK)jmin = i;
+        if(nums[i]==maxK)jmax = i;
+        res = res+Math.max(0,Math.min(jmin,jmax)-jbad);
+    }
+    return res;
+};
