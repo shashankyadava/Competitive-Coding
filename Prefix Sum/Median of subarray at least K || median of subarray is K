@@ -1,0 +1,27 @@
+class Solution {
+  public:
+  long long fun(vector<int>&a,int n,int m){
+    
+    long long currsum = 0,total = 0,ans = 0;
+    map<long long,long long>mp;
+    mp[0]++;
+    for(int i = 0; i<n; i++){
+        
+        if(a[i]<m){
+            currsum--;
+            total-=mp[currsum];
+        }
+        else {
+            total+=mp[currsum];
+            currsum++;
+        }
+        ans+=total;
+        mp[currsum]++;
+    }
+    return ans;
+  }
+    long long countSubarray(int N,vector<int> A,int M) {
+        // fun function is used to calculate the number of subarray which have median atleast K
+        return fun(A,N,M)-fun(A,N,M+1);
+    }
+};
