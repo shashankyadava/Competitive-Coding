@@ -1,0 +1,20 @@
+class Solution {
+public:
+    TreeNode* recur(ListNode *start,ListNode *end){
+        if(start==end)return NULL;
+        ListNode *slow = start;
+        ListNode *fast = start;
+        while(fast!=end&&fast->next!=end){
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        TreeNode *mid = new TreeNode(slow->val);
+        mid->left = recur(start,slow);
+        mid->right = recur(slow->next,end);
+        return mid;
+    }
+    TreeNode* sortedListToBST(ListNode* head) {
+        if(head==NULL)return NULL;
+        return recur(head,NULL);
+    }
+};
