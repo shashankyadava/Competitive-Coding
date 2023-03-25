@@ -1,0 +1,68 @@
+codeforces: round 802 helping nature
+
+Intuition: 
+My intuition: You can alter the "height" of the entire array (either decrease or increase it), so instead of trying to make the heights of all trees 0
+, I tried making them equal to the first element of the array (say curh
+), and then performing operations on the entire array at the end.
+
+If a[i]≠a[i+1]
+, then we would have to perform some operations to make them equal:
+
+If a[i]>a[i+1]
+, then we would have to decrease the prefix ending at i
+, and we would require (a[i]−a[i+1])
+ operations. This would also decrease the height of the array behind i
+ (curh
+) by (a[i]−a[i+1])
+.
+If a[i]<a[i+1]
+, then we would have to decrease the suffix ending at i+1
+, and we would require (a[i+1]−a[i])
+ operations. Note, this would not affect curh
+, but would decrease all elements after i+1
+ as well, so a[k+1]−a[k]
+ ∀
+ (i<k<n)
+ would be preserved.
+So, basically adding abs(a[i]−a[i+1])
+ ∀
+ i
+ to ans
+, and decreasing the curh
+ by the same amount when a[i]>a[i+1]
+, and the final answer would be (ans+abs(curh))
+.
+
+
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+int main()
+{
+    ll t; cin>>t;
+    while(t--){
+        ll n; cin>>n;
+        ll a[n];
+        for(int i = 0; i<n; i++)cin>>a[i];
+        ll currH = a[0];
+        ll ans = 0;
+        for(int i = 0; i<n-1; i++){
+            ans+=abs(a[i]-a[i+1]);
+            if(a[i]>a[i+1]){
+                currH+=a[i+1]-a[i];
+            }
+        }
+        cout<<ans+abs(currH)<<endl;;
+    }
+
+    return 0;
+}
