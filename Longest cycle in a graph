@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int visited[100005];
+    int maxx = -1;
+    void dfs(int u,vector<int> &edges,vector<int> &time){
+        visited[u] = 1;
+        if(edges[u]!=-1){
+            if(visited[edges[u]]==1){
+                maxx = max(maxx,time[u]-time[edges[u]]+1);
+                return;
+            }
+            else if(visited[edges[u]]==0){
+                time[edges[u]] = time[u]+1;
+                dfs(edges[u],edges,time);   
+            }
+        }
+        visited[u] = 2;
+    }
+    int longestCycle(vector<int>& edges) {
+        int n = edges.size();
+        vector<int>time(n,0);
+        for(int i = 0; i<n; i++){
+            if(visited[i]==0){
+                time[i] = 0;
+                dfs(i,edges,time);
+            }
+        }
+        return maxx;
+    }
+};
