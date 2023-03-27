@@ -1,0 +1,70 @@
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <ext/pb_ds/detail/standard_policies.hpp>
+using namespace std;
+using namespace __gnu_pbds;
+#define ll long long
+#define sky LONG_LONG_MAX
+#define ajen LONG_LONG_MIN
+#define mod 1000000007
+#define modulo 998244353
+#define nline '\n'
+#define need_mod 2147483647
+// const int N = 100000;
+template <class T>
+using maxpq = priority_queue<T>;
+template <class T>
+using minpq = priority_queue<T, vector<T>, greater<T>>;
+template <typename PB>
+using ordered_set = tree<PB, null_type, less_equal<PB>, rb_tree_tag, tree_order_statistics_node_update>;
+// order_of_key (k) : Number of items strictly smaller than k .
+// find_by_order(k) : K-th element in a set (counting from zero i.e. it is zero indexed based).
+int dx[4] = {1, -1, 0, 0};
+int dy[4] = {0, 0, 1, -1};
+ll res = 0;
+ll N;
+
+ll dfs(int u,int parent,vector<ll>&components,vector<pair<ll,ll>>g[]){
+    ll ans = 1;
+    for(auto child: g[u]){
+        if(child.first==parent)continue;
+        ans+=dfs(child.first,u,components,g);
+    }
+    return components[u] = ans;
+}
+
+void dfs2(int u,int parent,vector<ll>&components,vector<pair<ll,ll>>g[]){
+    for(auto child: g[u]){
+        if(child.first==parent)continue;
+        res+=(min(components[child.first],N-components[child.first])*child.second*2);
+        dfs2(child.first,u,components,g);
+    }
+}
+int main()
+{
+    // setIO("filename");
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll t;
+    cin >> t;
+    ll c = 1;
+    while (t--){
+        
+        ll n; cin>>n;
+        N = n;
+        vector<pair<ll,ll>>g[n+1];
+        for(int i = 0; i<n-1; i++){
+            int x,y,wt; cin>>x>>y>>wt;
+            g[x].push_back({y,wt});
+            g[y].push_back({x,wt});
+        }
+        vector<ll>components(n+1,0);
+        dfs(1,0,components,g);
+        dfs2(1,0,components,g);
+        cout<<"Case #"<<c<<":"<<" "<<res<<endl;
+        c++;
+        res = 0;
+    }
+    return 0;
+}
