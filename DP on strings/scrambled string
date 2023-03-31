@@ -1,0 +1,33 @@
+The important factor in this question is how you will divide the string and what the outcome will it give.
+s1[0.....i]&&s2[0.....i]
+s1[i.....len-1]&&s2[i.....len-1]
+above is first case
+
+
+s1[0....i]&&s2[len-i,....i]
+s1[i.....len-i]&&s2[0,len-i]
+above is the second case
+
+CODE::
+
+class Solution {
+public:
+    unordered_map<string,bool>dp;
+    bool recur (string s1, string s2){
+        bool res = false;
+        if(s1.size()==0)return true;
+        if(s1.size()==1)return s1==s2;
+        if(dp.count(s1+s2))return dp[s1+s2];
+        if(s1==s2)return dp[s1+s2] = true;
+        else{
+            for(int i = 1; i<s1.size()&&!res; i++){
+                res = res||recur(s1.substr(0,i),s2.substr(0,i))&&recur(s1.substr(i,s1.size()-i),s2.substr(i,s1.size()-i));
+                res = res||recur(s1.substr(0,i),s2.substr(s1.size()-i,i))&&recur(s1.substr(i,s1.size()-i),s2.substr(0,s1.size()-i));
+            }
+            return dp[s1+s2] = res;
+        }
+    }
+    bool isScramble(string s1, string s2) {
+        return recur(s1,s2);
+    }
+};
