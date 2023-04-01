@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+void dfs1(int parent,vector<int>g[],vector<int>&stack,vector<int>&visited){
+    visited[parent] = 1;
+    for(auto child: g[parent]){
+        if(visited[child]==0){
+            dfs1(child,g,stack,visited);
+        }
+    }
+    stack.push_back(parent);
+}
+void dfs2(int parent,vector<int>rg[],vector<int>&visited,int parent_of_all,vector<int>&kingdom){
+    visited[parent] = 1;
+    kingdom[parent] = parent_of_all;
+    for(auto child : rg[parent]){
+        if(visited[child]==0){
+            dfs2(child,rg,visited,parent_of_all,kingdom);
+        }
+    }
+}
+int main(){
+
+    int n,m; cin>>n>>m;
+    vector<int>g[n];
+    vector<int>rg[n];
+    for(int i = 0; i<m; i++){
+        int x,y; cin>>x>>y;
+        x--,y--;
+        g[x].push_back(y);
+        rg[y].push_back(x);
+    }
+    vector<int>visited(n);
+    for(int i = 0; i<n; i++)visited[i] = 0;
+    vector<int>rev_graph;
+    for(int i = 0; i<n; i++){
+        if(visited[i]==0){
+            dfs1(i,g,rev_graph,visited);
+        }
+    }
+    for(int i = 0; i<n; i++)visited[i] = 0;
+    int count = 0;
+    vector<int>kingdom(n);
+    for(int i = rev_graph.size()-1; i>=0; i--){
+        // cout<<rev_graph[i]<<" ";
+        if(visited[rev_graph[i]]==0){
+            dfs2(rev_graph[i],rg,visited,rev_graph[i],kingdom);
+        }
+    }
+    map<int,int>mp;
+    for(int i = 0; i<n; i++){
+        if(mp.find(kingdom[i])==mp.end()){
+            mp[kingdom[i]] = ++count;
+        }
+    }
+    cout<<count<<endl;
+    for(int i = 0; i<n; i++){
+        cout<<mp[kingdom[i]]<<" ";
+    }
+    
+    return 0;
+}
