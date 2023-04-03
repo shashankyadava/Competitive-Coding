@@ -1,0 +1,36 @@
+class Solution {
+public:
+    map<string,int>dp;
+    vector<int>v;
+    string encodeState(int pos, vector<int>& sessions) {
+        vector<int> copy = sessions;
+        sort(copy.begin(), copy.end());
+        
+        string key = to_string(pos) + "$";
+        for (int i = 0; i < copy.size(); i++)
+            key += to_string(copy[i]) + "$";
+        
+        return key;
+    }
+    int recur(int index,int n,vector<int>&t,int sessionTime){
+        if(index==n){
+            return 0;
+        }
+        string key = encodeState(index,v);
+        if(dp.find(key)!=dp.end())return dp[key];
+        v.push_back(t[index]);
+        int ans = 1+recur(index+1,n,t,sessionTime);
+        v.pop_back();
+        for(int i = 0; i<v.size(); i++){
+            if(v[i]+t[index]<=sessionTime){
+                v[i]+=t[index];
+                ans = min(ans,recur(index+1,n,t,sessionTime));
+                v[i]-=t[index];
+            }
+        }
+        return dp[key] = ans;
+    }
+    int minSessions(vector<int>& tasks, int sessionTime) {
+        return recur(0,tasks.size(),tasks,sessionTime);
+    }
+};
