@@ -1,0 +1,26 @@
+class Solution {
+public:
+    bool recur(string &s,int i,int j,int dp[][1001],vector<int>&answer){
+        if(dp[i][j]!=-1)return dp[i][j];
+        if(i>=j){
+            return dp[i][j] = true;
+        }
+        bool found = false;
+        if(s[i]==s[j]){
+            found = recur(s,i+1,j-1,dp,answer);
+        }
+        recur(s,i+1,j,dp,answer);
+        recur(s,i,j-1,dp,answer);
+        if(found&&(j-i+1)>answer[2]){
+            answer = {i,j,j-i+1};
+        }
+        return dp[i][j] = found;
+    }
+    string longestPalindrome(string s) {
+        vector<int>answer = {0,0,1};
+        int dp[1001][1001];
+        memset(dp,-1,sizeof(dp));
+        recur(s,0,s.size()-1,dp,answer);
+        return s.substr(answer[0],answer[2]);
+    }
+};
