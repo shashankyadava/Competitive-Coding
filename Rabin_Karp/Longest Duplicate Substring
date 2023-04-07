@@ -1,0 +1,47 @@
+class Solution {
+public:
+    vector<long long>ori;
+    long m = 1e15 + 7;
+    string rabin_karp(string s,int mid){
+        long long curr = 0;
+        for(int i = 0; i<=mid; i++){
+            curr = (curr*31+(s[i]-'a'))%m;
+        }
+        unordered_map<long long,long long>mp;
+        mp[curr] = 0;
+        for(int i = mid+1; i<s.size(); i++){
+            curr = ((curr-ori[mid]*(s[i-mid-1]-'a'))%m+m)%m;
+            curr = (curr*31+(s[i]-'a'))%m;
+            if(mp.find(curr)==mp.end()){
+                mp[curr] = i-mid;
+            }
+            else{
+                return s.substr(mp[curr],mid+1);
+            }
+        }
+        return "";
+    }
+    string longestDupSubstring(string s) {
+        int n = s.size();
+        string ans = "";
+        ori.resize(n);
+        for(int i = 0; i<n; i++){
+            ori[i] = (i==0?1:((ori[i-1]*31)%m));
+        }
+        long long low = 0,high = s.size()-1;
+        while(low<=high){
+            long long mid = low+(high-low)/2;
+            string temp = rabin_karp(s,mid);
+            if(temp.size()==0){
+                high = mid-1;
+            }
+            else{
+                if(ans.size()<temp.size()){
+                    ans = temp;
+                }
+                low = mid+1;
+            }
+        }
+        return ans;
+    }
+};
