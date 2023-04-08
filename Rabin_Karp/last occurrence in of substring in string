@@ -1,0 +1,32 @@
+ int rabin_karp(string &A,string &B){
+    long long m = 1e9+9;
+    long long p = 31;
+    long long len_a = A.size(),len_b = B.size();
+    vector<long long>ori(max(len_a,len_b));
+    ori[0] = 1;
+    for(int i = 1; i<len_a; i++){
+        ori[i] = (ori[i-1]*p)%m;
+    }
+    vector<long long>h(len_a+1,0);
+    for(int i = 0; i<len_a; i++){
+        h[i+1] = (h[i]+(A[i]-'a'+1)*ori[i])%m;
+    }
+    long long ss = 0;
+    for(int i = 0; i<B.size(); i++){
+        ss = (ss+(B[i]-'a'+1)*ori[i])%m;
+    }
+    // cout<<ss<<endl;
+    long long last = -1;
+    for(int i = 0; i+len_b-1<len_a; i++){
+        long long curr_h = (h[i+len_b]-h[i]+m)%m;
+        // cout<<curr_h<<endl;
+        if(curr_h==ss*ori[i]%m){
+            last = i+1;
+        }
+    }
+    return last;
+}
+    int findLastOccurence(string A,string B){
+        // cout<<A<<" "<<B<<endl;
+        return rabin_karp(A,B);
+    }
