@@ -1,0 +1,30 @@
+class Solution {
+public:
+    vector<int> lps_formation(string &str){
+        int n = str.size();
+        vector<int>lps(n,0);
+        int i = 1,j = 0;
+        while(i<n){
+            if(str[i]==str[j]){
+                lps[i++] = ++j;
+            }
+            else{
+                if(j!=0){
+                    j = lps[j-1];
+                }
+                else{
+                    lps[i] = 0;
+                    i++;
+                }
+            }
+        }
+        return lps;
+    }
+    int minChar(string str){
+        string rts = str;
+        reverse(rts.begin(),rts.end());
+        str = str+"$"+rts;
+        vector<int>lps = lps_formation(str);
+        return rts.size()-lps[lps.size()-1];
+    }
+};
