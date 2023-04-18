@@ -1,0 +1,38 @@
+class Solution
+{
+public:
+    vector<long long> min_max(int n,vector<long long> &pref,long l,long r){
+        long long low = l,high = r;
+        long long max_sum = pref[r]-pref[l-1];
+        long long min_sum = 0;
+        while(low<=high){
+            long long mid = low+(high-low)/2;
+            long long sum_left = (pref[mid]-pref[l-1]);
+            long long sum_right = (pref[r]-pref[mid]);
+            if(abs(sum_right-sum_left)<(max_sum-min_sum)){
+                max_sum = max(sum_right,sum_left);
+                min_sum = min(sum_right,sum_left);
+            }
+            if(sum_left<sum_right){
+                low = mid+1;
+            }
+            else high = mid-1;
+        }
+        return vector<long long>{min_sum,max_sum};
+    }
+    long long minDifference(int n, vector<int> &a) {
+        vector<long long>pref(n+1);
+        pref[0] = 0;
+        pref[1] = a[0];
+        for(int i = 1; i<n; i++){
+            pref[i+1] = pref[i]+a[i];
+        }
+        long long ans = pref[n];
+        for(int i = 1; i<n-2; i++){
+            vector<long long>Left = min_max(n,pref,1,i+1);
+            vector<long long>Right = min_max(n,pref,i+2,n);
+            ans = min(ans,(max(Left[1],Right[1])-min(Left[0],Right[0])));
+        }
+        return ans;
+    }
+};
