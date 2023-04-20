@@ -1,0 +1,30 @@
+
+int mod = 1000000007;
+class Solution {
+public:
+    
+    long long dp[1001][1001];
+    long long recur(string &t, vector<vector<int>> &v,int j,int i){
+        if(dp[i][j]!=-1)return dp[i][j];
+        if(j==t.size())return 1;
+        if(i==v.size())return 0;
+        long long ans = 0;
+        ans+=recur(t,v,j,i+1)%mod;
+        ans+=(v[i][t[j]-'a']%mod*recur(t,v,j+1,i+1)%mod)%mod;
+        return dp[i][j] = ans%mod;
+        
+        
+    }
+    int numWays(vector<string>& w, string t) {
+        int n = w.size();
+        int m = w[0].size();
+        vector<vector<int>>v(m,vector<int>(26,0));
+        for(int i = 0; i<n; i++){
+            for(int j = 0; j<m; j++){
+                v[j][w[i][j]-'a']++;
+            }
+        }
+        memset(dp,-1,sizeof(dp));
+        return recur(t,v,0,0)%mod;
+    }
+};
