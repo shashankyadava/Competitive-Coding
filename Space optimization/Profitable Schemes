@@ -1,0 +1,39 @@
+class Solution {
+public:
+    int mod = 1000000007;
+//     long long dp[101][101][101];
+//     long long recur(int sum, vector<int> &group, vector<int> &profit, int index, int minProfit){
+        
+//         if(index==group.size()&&minProfit<=0)return 1;
+//         if(index==group.size()&&minProfit>0)return 0;
+//         if(minProfit<=0)minProfit = 0;
+//         if(dp[index][sum][minProfit]!=-1)return dp[index][sum][minProfit];
+//         if(sum-group[index]>=0){
+//             return dp[index][sum][minProfit] = (recur(sum-group[index],group,profit,index+1,minProfit-profit[index])%mod+recur(sum,group,profit,index+1,minProfit)%mod)%mod;
+//         }
+//         else return dp[index][sum][minProfit] = recur(sum,group,profit,index+1,minProfit)%mod;
+//     }
+    int profitableSchemes(int n, int minProfit, vector<int>& group, vector<int>& profit){
+        // memset(dp,-1,sizeof(dp));
+        // long long ans = recur(n,group,profit,0,minProfit)%mod;
+        // return ans;
+        vector<vector<int>>dp(n+1,vector<int>(minProfit+1,0));
+        
+        dp[0][0] = 1;
+        for(int k = 1; k<=group.size(); k++){
+            int g = group[k-1];
+            int p = profit[k-1];
+            for(int i = n; i>=g; i--){
+                for(int j = minProfit; j>=0; j--){
+                    dp[i][j] = dp[i][j]%mod+dp[i-g][max(0,j-p)]%mod;
+                    dp[i][j] = dp[i][j]%mod;
+                }
+            }
+        }
+        int sum  = 0;
+        for(int i = 0; i<=n; i++){
+            sum = (sum+dp[i][minProfit])%mod;
+        }
+        return sum;
+    }
+};
