@@ -1,0 +1,95 @@
+Alice and Bob have an undirected graph of n nodes and three types of edges:
+
+Type 1: Can be traversed by Alice only.
+Type 2: Can be traversed by Bob only.
+Type 3: Can be traversed by both Alice and Bob.
+Given an array edges where edges[i] = [typei, ui, vi] represents a bidirectional edge of type typei between nodes ui and vi, find the maximum number of edges you can 
+remove so that after removing the edges, the graph can still be fully traversed by both Alice and Bob. The graph is fully traversed by Alice and Bob if starting from any 
+node, they can reach all other nodes.
+
+Return the maximum number of edges you can remove, or return -1 if Alice and Bob cannot fully traverse the graph.
+
+class Solution {
+public:
+    
+    int f(int x,vector<int>&parent){
+        if(parent[x]==-1)return x;
+        return parent[x] = f(parent[x],parent);
+    }
+    void u(int a,int b,vector<int>&rank,vector<int>&parent){
+        int x = f(a,parent);
+        int y = f(b,parent);
+        if(x!=y){
+            if(rank[x]>=y){
+                parent[y] = x;
+                rank[x]+=rank[y];
+            }
+            else{
+                parent[x] = y;
+                rank[y]+=rank[x];
+            }
+        }
+    }
+    int maxNumEdgesToRemove(int n, vector<vector<int>>& edges) {
+        
+        vector<int>parent1,parent2,rank1,rank2;
+        parent1.resize(n+1);
+        parent2.resize(n+1);
+        rank1.resize(n+1,0);
+        rank2.resize(n+1,0);
+        for(int i = 0; i<n+1; i++)parent1[i] = -1;
+        for(int i = 0; i<n+1; i++)parent2[i] = -1;
+        int count1 = 0,count2 = 0;
+        for(int i = 0; i<edges.size(); i++){
+            int x = edges[i][0];
+            int y = edges[i][1];
+            int z = edges[i][2];
+            bool flag1 = 0,flag2 = 0;
+            if(x==3){
+                int a = f(y,parent1);
+                int b = f(z,parent1);
+                if(a!=b){
+                   u(a,b,rank1,parent1); 
+                }
+                else flag1 = 1;
+            }
+            if(x==3){
+                int a = f(y,parent2);
+                int b = f(z,parent2);
+                if(a!=b){
+                    u(a,b,rank2,parent2);
+                }
+                else flag2 = 1;
+            }
+            if(flag1&&flag2)count1++;
+        }
+        for(int i = 0; i<edges.size(); i++){
+            int x = edges[i][0];
+            int y = edges[i][1];
+            int z = edges[i][2];
+            if(x==1){
+                int a = f(y,parent1);
+                int b = f(z,parent1);
+                if(a!=b){
+                   u(a,b,rank1,parent1); 
+                }
+                else count1++;
+            }
+            if(x==2){
+                int a = f(y,parent2);
+                int b = f(z,parent2);
+                if(a!=b){
+                    u(a,b,rank2,parent2);
+                }
+                else count2++;
+            }
+        }
+        int c1 = 0,c2 = 0;
+        for(int i = 1; i<=n; i++){
+            if(parent1[i]==-1)c1++;
+            if(parent2[i]==-1)c2++;
+        }
+        if(c1==1&&c2==1)return count1+count2;
+        else return -1;
+    }
+};
